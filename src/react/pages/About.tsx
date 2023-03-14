@@ -1,0 +1,196 @@
+import { useTranslation } from "react-i18next";
+import React from "react";
+
+const APP_VERSION = "0.1.2";
+
+const AboutEnglish = () => {
+  return (
+    <>
+      <div className="pt-4 card about-card" dir="ltr">
+        <p className="text-center">
+          Check out the project{" "}
+          <a
+            href="https://github.com/EnlightenCode/tadabor-desktop"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Github repo
+          </a>
+        </p>
+        <div className="card-body">
+          <h5>Intro</h5>
+          <p>
+            This project is an App that allows you to browse through the Quran
+            and write your notes/reflections below the verses, everything will
+            be saved in the application local folder.
+          </p>
+          <h5>How to use</h5>
+          <p>
+            Simply check Quran Browser on the app, you can click the down arrow
+            button next to any verse to open a form where you can enter your
+            text, once you are done writing you can press the save button, all
+            the data will be saved on the application local folder and
+            unistalling the app will erase the data you have saved.
+          </p>
+
+          <h5>Future project</h5>
+          <p>
+            Once this project is complete (all features implemented), it will be
+            used as the basis for another project that aims to be a platform for
+            collaborative translation and reflection upon the Qur'an, the goal
+            being to achieve an accurate understanding of the true message of
+            the Qur'an By undoing all the semantic changes that have occurred
+            over the centuries, no deadline has been set yet, and it all depends
+            on God's will.
+          </p>
+          <h5>Credits</h5>
+          <br />
+          <ul>
+            <li className="fw-bold">
+              The creator of the universe for all his favors that if I tried to
+              count I would never be able to number them
+            </li>
+            <br />
+            <li>
+              <a
+                href="https://github.com/risan/quran-json"
+                target="_blank"
+                rel="noreferrer"
+              >
+                quran-json
+              </a>{" "}
+              project for the compilation of chapter names and their
+              transliteration
+            </li>
+            <li>
+              Credits Tanzil project for the Quran text compilation ( Check the
+              bottom of{" "}
+              <a
+                href="https://raw.githubusercontent.com/EnlightenCode/tadabor/master/public/res/quran-simple-plain.txt"
+                target="_blank"
+                rel="noreferrer"
+              >
+                quran-simple-plain.txt{" "}
+              </a>{" "}
+              )
+            </li>
+
+            <li>
+              Computer Research Center of Islamic Sciences (noorsoft.org) and
+              Tanzil Project (tanzil.info) and Zekr Project (zekr.org) for the
+              Quran roots compilation ( Check the bottom of{" "}
+              <a
+                href="https://github.com/EnlightenCode/tadabor/blob/master/public/res/quran-root.txt"
+                target="_blank"
+                rel="noreferrer"
+              >
+                quran-root.txt
+              </a>{" "}
+              )
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <p className="text-center text-muted">App Version {APP_VERSION}</p>
+    </>
+  );
+};
+
+const AboutArabic = () => {
+  return (
+    <>
+      <div className="pt-4 card about-card" dir="rtl">
+        <p className="text-center">
+          إطلع على موقع البرنامج في{" "}
+          <a
+            href="https://github.com/EnlightenCode/tadabor-desktop"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Github
+          </a>
+        </p>
+        <div className="card-body">
+          <h5>تقديم</h5>
+          <p>
+            هذا تطبيق يخول المستخدم من تصفح القرآن وكتابة تدبرات أو ملاحظات تحت
+            الآيات، كل ما يكتب يتم تسجيله في متصفحك.
+          </p>
+          <h5>كيفية الإستخدام</h5>
+          <p>
+            اذهب الى المتصفح في التطبيق، يمكنك الضغط على الزر المحاذي لأي آية
+            حتى تظهر لك خانة الكتابة، وحين تنتهي من الكتابة يمكنك الضغط على زر
+            الحفظ، كل البيانات يتم تسجيلها في ملفات التطبيق وحذف التطبيق قد يحذف
+            أي بيانات قمت بتسجيلها هنا.
+          </p>
+          <h5>المشروع المقبل</h5>
+          <p>
+            بمجرد اكتمال هذا المشروع الحالي، سيتم إستخدامه كأساس لمشروع آخر يهدف
+            إلى أن يكون منصة تشاركية لترجمة وتدبر القرآن، والهدف تحقيق فهم دقيق
+            للرسالة الحقيقية للقرآن عن طريق التراجع عن كل التغييرات الدلالية
+            التي حدثت على مر القرون، لم يتم تحديد موعد نهائي للمشروع، وكل شيء
+            يعتمد على مشيئة الله.
+          </p>
+          <h5>الشكر</h5>
+          <br />
+          <ul>
+            <li className="fw-bold">
+              خالق الكون لنعمه التي إن حاولت أن أحصيها فلن أعدها
+            </li>
+            <br />
+            <li>
+              <a
+                href="https://github.com/risan/quran-json"
+                target="_blank"
+                rel="noreferrer"
+              >
+                quran-json
+              </a>{" "}
+              لتجميع أسماء سور مع ترجمتها
+            </li>
+            <li>
+              الشكر إلى Tanzil project لنص القرآن الإلكتروني ( أنظر في آخر{" "}
+              <a
+                href="https://raw.githubusercontent.com/EnlightenCode/tadabor/master/public/res/quran-simple-plain.txt"
+                target="_blank"
+                rel="noreferrer"
+              >
+                quran-simple-plain.txt
+              </a>{" "}
+              )
+            </li>
+
+            <li>
+              الشكر إلى Computer Research Center of Islamic Sciences
+              (noorsoft.org) و Tanzil Project (tanzil.info) و Zekr Project
+              (zekr.org) لملف جذور القرآن الإلكتروني ( أنظر إلى آخر{" "}
+              <a
+                href="https://github.com/EnlightenCode/tadabor/blob/master/public/res/quran-root.txt"
+                target="_blank"
+                rel="noreferrer"
+              >
+                quran-root.txt
+              </a>{" "}
+              )
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <p className="text-center text-muted">نسخة التطبيق {APP_VERSION}</p>
+    </>
+  );
+};
+
+function About() {
+  const { i18n } = useTranslation();
+
+  if (i18n.resolvedLanguage === "en") {
+    return <AboutEnglish />;
+  }
+
+  return <AboutArabic />;
+}
+
+export default About;

@@ -1,0 +1,159 @@
+// Import all of Bootstrap's CSS
+@import "~bootstrap/scss/bootstrap";
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.browser {
+  display: flex;
+  overflow: hidden;
+  max-height: 100%;
+  height: 100%;
+
+  &-search {
+    padding: 16px;
+  }
+
+  &-display {
+    flex: 1;
+    overflow-y: scroll;
+    min-height: 100%;
+    padding: 0.25rem;
+
+    &-card {
+      min-height: 100%;
+    }
+  }
+
+  .btn-verse {
+    cursor: pointer;
+    &:hover {
+      color: cornflowerblue;
+    }
+  }
+
+  .verse-selected {
+    background-color: bisque;
+  }
+}
+
+.translation {
+  display: flex;
+  overflow: auto;
+  max-height: 100%;
+  height: 100%;
+
+  &-display {
+    flex: 1;
+    overflow-y: scroll;
+    min-height: 100%;
+    padding: 0.25rem;
+
+    &-card {
+      min-height: 100%;
+    }
+  }
+}
+
+.roots {
+  display: flex;
+  overflow: hidden;
+  max-height: 100%;
+  height: 100%;
+  flex-direction: column;
+
+  &-list {
+    overflow-y: scroll;
+  }
+}
+
+.yournotes {
+  overflow-y: scroll;
+  flex: 1;
+}
+
+.coloring {
+  display: flex;
+  padding: 2rem;
+  gap: 2rem;
+  overflow: hidden;
+  max-height: 100%;
+  height: 100%;
+
+  .chapter-search {
+    height: 30px;
+    min-width: 200px;
+    border: none;
+    border: 1px solid rgb(201, 202, 204);
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+
+    &:focus-visible {
+      outline: none;
+      border-color: rgba(76, 76, 167, 0.623);
+    }
+  }
+
+  .chapter-list {
+    min-width: 200px;
+    max-height: 400px;
+    overflow-y: scroll;
+  }
+
+  .chapter-item {
+    background-color: rgb(201, 202, 204);
+    cursor: pointer;
+    margin-bottom: 2px;
+    padding: 2px;
+  }
+
+  .chapter-selected {
+    background-color: rgba(76, 76, 167, 0.623);
+    color: black;
+  }
+
+  .verses-side {
+    overflow-y: scroll;
+    width: 100%;
+  }
+
+  .card-title {
+    text-align: center;
+    color: darkblue;
+    font-size: larger;
+  }
+
+  .verse-list {
+    padding: 2rem;
+    min-height: 100%;
+    background-color: rgb(201, 202, 204);
+
+    .verse-item {
+      border-bottom: 1.5px solid gainsboro;
+      padding-bottom: 4px;
+      padding-top: 4px;
+    }
+  }
+}
+
+.about-card {
+  display: flex;
+  flex: 1;
+}
+
+@media (max-width: 800px) {
+  .browser,
+  .translation {
+    flex-direction: column;
+    overflow: auto;
+    max-height: none;
+  }
+}
