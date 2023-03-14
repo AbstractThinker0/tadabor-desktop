@@ -2,6 +2,10 @@
   "name": "tadabor-desktop",
   "productName": "tadabor",
   "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/EnlightenCode/tadabor-desktop.git"
+  },
   "description": "A Quran desktop application",
   "main": ".webpack/main",
   "scripts": {
