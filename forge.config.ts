@@ -53,7 +53,7 @@ const config: ForgeConfig = {
           owner: "EnlightenCode",
           name: "tadabor-desktop",
         },
-        prerelease: true,
+        prerelease: false,
       },
     },
   ],
