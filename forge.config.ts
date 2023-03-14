@@ -20,7 +20,7 @@ const config: ForgeConfig = {
     {
       name: "@electron-forge/maker-squirrel",
       config: {
-        name: "tada",
+        name: "tadabor",
         setupIcon: __dirname + "/src/tadabor.ico",
         iconUrl: __dirname + "/src/tadabor.ico",
       },
