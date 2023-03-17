@@ -10,6 +10,7 @@ import { rendererConfig } from "./webpack.renderer.config";
 
 const config: ForgeConfig = {
   packagerConfig: {
+    executableName: "tadabor",
     icon: "./src/tadabor.ico",
   },
   rebuildConfig: {},
