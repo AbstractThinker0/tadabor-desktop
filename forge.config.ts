@@ -55,6 +55,7 @@ const config: ForgeConfig = {
           name: "tadabor-desktop",
         },
         prerelease: false,
+        draft: true,
       },
     },
   ],
