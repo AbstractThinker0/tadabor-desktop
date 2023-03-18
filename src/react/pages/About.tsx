@@ -20,15 +20,15 @@ const AboutEnglish = ({ appVer }: any) => {
           <p>
             This project is an App that allows you to browse through the Quran
             and write your notes/reflections below the verses, everything will
-            be saved in the application local folder.
+            be saved in the application.
           </p>
           <h5>How to use</h5>
           <p>
             Simply check Quran Browser on the app, you can click the down arrow
             button next to any verse to open a form where you can enter your
             text, once you are done writing you can press the save button, all
-            the data will be saved on the application local folder and
-            unistalling the app will erase the data you have saved.
+            the data will be saved on the application and unistalling the app
+            will erase the data you have saved.
           </p>
 
           <h5>Future project</h5>
@@ -119,8 +119,8 @@ const AboutArabic = ({ appVer }: any) => {
           <p>
             اذهب الى المتصفح في التطبيق، يمكنك الضغط على الزر المحاذي لأي آية
             حتى تظهر لك خانة الكتابة، وحين تنتهي من الكتابة يمكنك الضغط على زر
-            الحفظ، كل البيانات يتم تسجيلها في ملفات التطبيق وحذف التطبيق قد يحذف
-            أي بيانات قمت بتسجيلها هنا.
+            الحفظ، كل البيانات يتم تسجيلها في التطبيق وحذف التطبيق قد يحذف أي
+            بيانات قمت بتسجيلها هنا.
           </p>
           <h5>المشروع المقبل</h5>
           <p>
