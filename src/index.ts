@@ -1,4 +1,4 @@
-import { app, BrowserWindow, shell } from "electron";
+import { app, BrowserWindow, shell, ipcMain } from "electron";
 
 require("update-electron-app")();
 
@@ -22,6 +22,10 @@ const createWindow = (): void => {
       contextIsolation: true,
       nodeIntegration: false,
     },
+  });
+
+  ipcMain.handle("getVersionMain", () => {
+    return app.getVersion();
   });
 
   // and load the index.html of the app.

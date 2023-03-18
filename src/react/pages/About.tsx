@@ -1,9 +1,7 @@
 import { useTranslation } from "react-i18next";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-const APP_VERSION = "0.1.4";
-
-const AboutEnglish = () => {
+const AboutEnglish = ({ appVer }: any) => {
   return (
     <>
       <div className="pt-4 card about-card" dir="ltr">
@@ -92,12 +90,12 @@ const AboutEnglish = () => {
         </div>
       </div>
 
-      <p className="text-center text-muted">App Version {APP_VERSION}</p>
+      <p className="text-center text-muted">App Version {appVer}</p>
     </>
   );
 };
 
-const AboutArabic = () => {
+const AboutArabic = ({ appVer }: any) => {
   return (
     <>
       <div className="pt-4 card about-card" dir="rtl">
@@ -178,19 +176,29 @@ const AboutArabic = () => {
         </div>
       </div>
 
-      <p className="text-center text-muted">نسخة التطبيق {APP_VERSION}</p>
+      <p className="text-center text-muted">نسخة التطبيق {appVer}</p>
     </>
   );
 };
 
 function About() {
   const { i18n } = useTranslation();
+  const [appVer, SetAppVer] = useState("");
+
+  useEffect(() => {
+    const LoadVer = async () => {
+      const response = await window.app.getVersion();
+      SetAppVer(response);
+    };
+
+    LoadVer();
+  }, []);
 
   if (i18n.resolvedLanguage === "en") {
-    return <AboutEnglish />;
+    return <AboutEnglish appVer={appVer} />;
   }
 
-  return <AboutArabic />;
+  return <AboutArabic appVer={appVer} />;
 }
 
 export default About;

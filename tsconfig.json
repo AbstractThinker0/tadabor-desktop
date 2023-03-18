@@ -16,5 +16,6 @@
     },
     "jsx": "react-jsx"
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "files": ["src/renderer.d.ts"]
 }
