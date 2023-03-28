@@ -10,6 +10,10 @@ main {
   display: flex;
   flex-direction: column;
   height: 100vh;
+
+  .navbar-nav {
+    padding-right: 0;
+  }
 }
 
 .browser {
