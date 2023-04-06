@@ -17,7 +17,7 @@ i18n
       en: {
         translation: {
           alert_message:
-            "This is a beta version of the applicatio,, please make sure to have a backup of everything you save here.",
+            "This is a beta version of the app, please make sure to have a backup of everything you save here.",
           nav_brand: "Tadabor",
           nav_browser: "Browser",
           nav_about: "About",

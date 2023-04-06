@@ -22,6 +22,7 @@ function Layout({ children }: PropsWithChildren) {
   return (
     <main ref={mainRef}>
       <Navbar />
+      <AlertMessage />
       <QuranProvider>{children}</QuranProvider>
       <ToastContainer
         position={`${isRtl ? "top-left" : "top-right"}`}
@@ -30,5 +31,24 @@ function Layout({ children }: PropsWithChildren) {
     </main>
   );
 }
+
+const AlertMessage = () => {
+  const { t } = useTranslation();
+
+  return (
+    <div
+      className="alert alert-warning alert-dismissible fade show d-flex justify-content-center m-0"
+      role="alert"
+    >
+      {t("alert_message")}
+      <button
+        type="button"
+        className="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+  );
+};
 
 export default Layout;
