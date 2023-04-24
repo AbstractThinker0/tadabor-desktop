@@ -7,6 +7,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { QuranProvider } from "../../context/QuranContext";
+import AlertMessage from "./AlertMessage";
 
 function Layout({ children }: PropsWithChildren) {
   const mainRef = useRef<HTMLElement>(null);
@@ -31,24 +32,5 @@ function Layout({ children }: PropsWithChildren) {
     </main>
   );
 }
-
-const AlertMessage = () => {
-  const { t } = useTranslation();
-
-  return (
-    <div
-      className="alert alert-warning alert-dismissible fade show d-flex justify-content-center m-0"
-      role="alert"
-    >
-      {t("alert_message")}
-      <button
-        type="button"
-        className="btn-close"
-        data-bs-dismiss="alert"
-        aria-label="Close"
-      ></button>
-    </div>
-  );
-};
 
 export default Layout;
