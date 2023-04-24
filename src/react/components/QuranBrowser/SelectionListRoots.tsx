@@ -1,6 +1,7 @@
 import { memo, useMemo, useState } from "react";
 import useQuran from "../../context/QuranContext";
-import { QB_ACTIONS, useQuranBrowser } from "../../pages/QuranBrowser";
+import { useQuranBrowser } from "../../pages/QuranBrowser";
+import { qbActions } from "./consts";
 
 interface SelectionListRootsProps {
   isDisabled: boolean;
@@ -10,7 +11,7 @@ interface SelectionListRootsProps {
 const SelectionListRoots = memo(
   ({ isDisabled, searchString }: SelectionListRootsProps) => {
     const { quranRoots } = useQuran();
-    const { dispatchAction } = useQuranBrowser();
+    const dispatchAction = useQuranBrowser();
 
     const [stateSelect, setStateSelect] = useState<string>();
     const [itemsCount, setItemsCount] = useState(100);
@@ -29,7 +30,7 @@ const SelectionListRoots = memo(
 
       let selectedRoot = quranRoots[Number(rootId)];
 
-      dispatchAction(QB_ACTIONS.SET_SEARCH_STRING, selectedRoot.name);
+      dispatchAction(qbActions.setSearchString(selectedRoot.name));
     };
 
     const fetchMoreData = () => {
