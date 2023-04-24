@@ -1,12 +1,4 @@
-import {
-  createContext,
-  useState,
-  useEffect,
-  useContext,
-  PropsWithChildren,
-} from "react";
-
-import LoadingSpinner from "../components/LoadingSpinner";
+import { createContext, useContext, PropsWithChildren } from "react";
 
 import chapterNames from "../../data/chapters.json";
 import allQuranText from "../../data/quran_v2.json";
@@ -30,22 +22,6 @@ const QuranContext = createContext<QuranContent>({
 });
 
 export const QuranProvider = ({ children }: PropsWithChildren) => {
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    let clientLeft = false;
-
-    setIsLoading(false);
-
-    return () => {
-      clientLeft = true;
-    };
-  }, []);
-
-  if (isLoading) {
-    return <LoadingSpinner />;
-  }
-
   return (
     <QuranContext.Provider
       value={{
