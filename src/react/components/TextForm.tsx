@@ -34,7 +34,11 @@ const TextForm = ({
   useEffect(() => {
     const collapseElement = collapseRef.current;
     function onShownCollapse(event: Event) {
-      (event.target as HTMLDivElement).scrollIntoView({ block: "nearest" });
+      if (collapseRef.current?.parentElement)
+        collapseRef.current.parentElement.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+        });
     }
 
     if (collapseElement !== null) {
@@ -226,7 +230,7 @@ const FormComponent = ({
 
   useEffect(() => {
     if (formRef.current !== null)
-      formRef.current.scrollIntoView({ block: "nearest" });
+      formRef.current.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }, []);
 
   function onSubmitForm(event: FormEvent<HTMLFormElement>) {
@@ -281,13 +285,14 @@ const TextAreaComponent = ({
   handleInputChange,
 }: TextAreaProps) => {
   const minRows = 4;
+  const extraRows = 3;
   const [rows, setRows] = useState(minRows);
 
   useEffect(() => {
     const rowlen = inputValue.split("\n").length;
 
     if (rowlen >= minRows) {
-      setRows(rowlen + 2);
+      setRows(rowlen + extraRows);
     } else {
       setRows(minRows);
     }
