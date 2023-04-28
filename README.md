@@ -9,9 +9,9 @@ This project is an App that allows you to browse through the Quran and write you
 - [Contributing](#Contributing)
 - [Known bugs](#Known-bugs)
 - [TODO List](#TODO-List)
-- [Future project](#Future-project)
 - [Credits](#Credits)
 - [Local development](#Local-development)
+- [Future project](#Future-project)
 
 ## Install
 
@@ -39,10 +39,6 @@ None.
 - Document code and improve readability when possible.
 - Document all the features and how they can be used.
 
-## Future project:
-
-Once this project is complete (all features implemented), it will be used as the basis for another project that aims to be a platform for collaborative translation and reflection on the Qur'an, the goal being to achieve an accurate understanding of the true message of the Qur'an By undoing all the semantic changes that have occurred over the centuries, no deadline has been set yet, and it all depends on God's will.
-
 ## Credits
 
 - **The creator of the universe for all his favors that if I tried to count I would never be able to number them**
@@ -61,3 +57,7 @@ Once you have satisfied the prerequisites, you can install and start the applica
 
 1. `npm install`
 2. `npm run start`
+
+## Future project:
+
+Once this project is complete (all features implemented), it will be used as the basis for another project that aims to be a platform for collaborative translation and reflection on the Qur'an, the goal being to achieve an accurate understanding of the true message of the Qur'an By undoing all the semantic changes that have occurred over the centuries, no deadline has been set yet, and it all depends on God's will.
