@@ -1,4 +1,10 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import { app, BrowserWindow, shell, ipcMain } from "electron";
+const contextMenu = require("electron-context-menu");
+
+contextMenu({
+  showSearchWithGoogle: false,
+});
 
 require("update-electron-app")();
 
