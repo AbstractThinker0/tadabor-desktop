@@ -23,7 +23,8 @@ const config: ForgeConfig = {
       config: {
         name: "tadabor",
         setupIcon: __dirname + "/src/tadabor.ico",
-        iconUrl: __dirname + "/src/tadabor.ico",
+        iconUrl:
+          "https://raw.githubusercontent.com/EnlightenCode/tadabor-desktop/master/src/tadabor.ico",
       },
     },
   ],
