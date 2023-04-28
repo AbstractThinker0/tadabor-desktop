@@ -14,6 +14,36 @@ export interface searchIndexProps {
   wordIndex: string;
 }
 
+export interface versePart {
+  text: string;
+  highlight: boolean;
+}
+
+export interface searchResult {
+  key: string;
+  suraid: string;
+  verseid: string;
+  verseParts: versePart[];
+}
+
+export interface qbStateProps {
+  selectChapter: number;
+  selectedChapters: string[];
+  searchString: string;
+  searchingString: string;
+  searchingChapters: string[];
+  searchResult: searchResult[];
+  searchDiacritics: boolean;
+  searchIdentical: boolean;
+  searchError: boolean;
+  selectedRootError: boolean;
+  radioSearchMethod: SEARCH_METHOD;
+  radioSearchingMethod: SEARCH_METHOD;
+  searchIndexes: searchIndexProps[];
+  searchScope: SEARCH_SCOPE;
+  searchingScope: SEARCH_SCOPE;
+}
+
 export enum QB_ACTIONS {
   SET_CHAPTERS = "dispatchSetChapters",
   SET_SEARCH_STRING = "dispatchSetSearchString",
