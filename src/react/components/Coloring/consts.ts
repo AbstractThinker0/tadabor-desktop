@@ -1,4 +1,9 @@
-import { ActionsUnion, createActionPayload, verseProps } from "../../types";
+import {
+  ActionsUnion,
+  createActionPayload,
+  selectedChaptersType,
+  verseProps,
+} from "../../types";
 
 export interface colorProps {
   colorID: string;
@@ -22,6 +27,8 @@ export enum CL_ACTIONS {
   SET_COLORED_VERSES = "dispatchSetColoredVerses",
   SET_CURRENT_VERSE = "dispatchSetCurrentVerse",
   SET_CURRENT_COLOR = "dispatchSetCurrentColor",
+  SET_SELECTED_CHAPTERS = "dispatchSetSelectedChapters",
+  TOGGLE_SELECT_CHAPTER = "dispatchToggleSelectChapter",
 }
 
 export const clActions = {
@@ -65,6 +72,14 @@ export const clActions = {
     CL_ACTIONS.SET_CURRENT_COLOR,
     colorProps
   >(CL_ACTIONS.SET_CURRENT_COLOR),
+  setSelectedChapters: createActionPayload<
+    CL_ACTIONS.SET_SELECTED_CHAPTERS,
+    selectedChaptersType
+  >(CL_ACTIONS.SET_SELECTED_CHAPTERS),
+  toggleSelectChapter: createActionPayload<
+    CL_ACTIONS.TOGGLE_SELECT_CHAPTER,
+    number
+  >(CL_ACTIONS.TOGGLE_SELECT_CHAPTER),
 };
 
 export type clActionsProps = ActionsUnion<typeof clActions>;
