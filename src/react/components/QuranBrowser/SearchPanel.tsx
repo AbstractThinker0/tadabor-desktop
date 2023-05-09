@@ -1,42 +1,47 @@
-import { memo } from "react";
+import { memo, Dispatch } from "react";
 import { useTranslation } from "react-i18next";
 import useQuran from "../../context/QuranContext";
-import { useQuranBrowser } from "../../pages/QuranBrowser";
 
 import SelectionListChapters from "./SelectionListChapters";
 import SelectionListRoots from "./SelectionListRoots";
-import { SEARCH_METHOD, SEARCH_SCOPE, qbActions, searchResult } from "./consts";
+import {
+  SEARCH_METHOD,
+  SEARCH_SCOPE,
+  qbActions,
+  qbActionsProps,
+  searchResult,
+} from "./consts";
 
 interface SearchPanelProps {
-  radioSearchMethod: string;
+  searchMethod: string;
   searchDiacritics: boolean;
   searchIdentical: boolean;
   searchAllQuran: boolean;
   searchString: string;
   searchResult: searchResult[];
   selectedChapters: string[];
+  dispatchQbAction: Dispatch<qbActionsProps>;
 }
 
 const SearchPanel = memo(
   ({
-    radioSearchMethod,
+    searchMethod,
     searchDiacritics,
     searchIdentical,
     searchAllQuran,
     searchString,
     searchResult,
     selectedChapters,
+    dispatchQbAction,
   }: SearchPanelProps) => {
     const { allQuranText, absoluteQuran, chapterNames, quranRoots } =
       useQuran();
     const { t } = useTranslation();
-    const dispatchAction = useQuranBrowser();
 
-    const isRootSearch =
-      radioSearchMethod === SEARCH_METHOD.ROOT ? true : false;
+    const isRootSearch = searchMethod === SEARCH_METHOD.ROOT ? true : false;
 
     function setSearchAllQuran(status: boolean) {
-      dispatchAction(
+      dispatchQbAction(
         qbActions.setSearchScope(
           status === true
             ? SEARCH_SCOPE.ALL_CHAPTERS
@@ -46,20 +51,20 @@ const SearchPanel = memo(
     }
 
     function setSearchDiacritics(status: boolean) {
-      dispatchAction(qbActions.setSearchDiacritics(status));
+      dispatchQbAction(qbActions.setSearchDiacritics(status));
     }
 
     function setSearchIdentical(status: boolean) {
-      dispatchAction(qbActions.setSearchIdentical(status));
+      dispatchQbAction(qbActions.setSearchIdentical(status));
     }
 
-    function setRadioSearchMethod(method: SEARCH_METHOD) {
-      dispatchAction(qbActions.setRadioSearch(method));
+    function setSearchMethod(method: SEARCH_METHOD) {
+      dispatchQbAction(qbActions.setSearchMethod(method));
     }
 
     function onSearchSubmit() {
       if (isRootSearch) {
-        dispatchAction(
+        dispatchQbAction(
           qbActions.submitRootSearch({
             absoluteQuran,
             chapterNames,
@@ -67,7 +72,7 @@ const SearchPanel = memo(
           })
         );
       } else {
-        dispatchAction(
+        dispatchQbAction(
           qbActions.submitWordSearch({
             allQuranText,
             chapterNames,
@@ -83,9 +88,9 @@ const SearchPanel = memo(
       if (!selectedChapter) return;
 
       if (selectedOptions.length === 1) {
-        dispatchAction(qbActions.gotoChapter(selectedChapter));
+        dispatchQbAction(qbActions.gotoChapter(selectedChapter));
       } else {
-        dispatchAction(qbActions.setChapters(selectedOptions));
+        dispatchQbAction(qbActions.setChapters(selectedOptions));
       }
     }
 
@@ -96,8 +101,8 @@ const SearchPanel = memo(
           selectedChapters={selectedChapters}
         />
         <RadioSearchMethod
-          radioSearchMethod={radioSearchMethod}
-          setRadioSearchMethod={setRadioSearchMethod}
+          searchMethod={searchMethod}
+          setSearchMethod={setSearchMethod}
         />
         <CheckboxComponent
           checkboxState={searchDiacritics}
@@ -119,10 +124,12 @@ const SearchPanel = memo(
         <FormWordSearch
           onSearchSubmit={onSearchSubmit}
           searchString={searchString}
+          dispatchQbAction={dispatchQbAction}
         />
         <SelectionListRoots
           isDisabled={!isRootSearch}
           searchString={searchString}
+          dispatchQbAction={dispatchQbAction}
         />
         <SearchSuccessComponent searchResult={searchResult} />
       </div>
@@ -133,17 +140,17 @@ const SearchPanel = memo(
 SearchPanel.displayName = "SearchPanel";
 
 interface RadioSearchMethodProps {
-  radioSearchMethod: string;
-  setRadioSearchMethod: (method: SEARCH_METHOD) => void;
+  searchMethod: string;
+  setSearchMethod: (method: SEARCH_METHOD) => void;
 }
 
 const RadioSearchMethod = ({
-  radioSearchMethod,
-  setRadioSearchMethod,
+  searchMethod,
+  setSearchMethod,
 }: RadioSearchMethodProps) => {
   const { t, i18n } = useTranslation();
   const handleSearchMethod = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRadioSearchMethod(event.target.value as SEARCH_METHOD);
+    setSearchMethod(event.target.value as SEARCH_METHOD);
   };
   return (
     <div>
@@ -159,7 +166,7 @@ const RadioSearchMethod = ({
           name="inlineRadioOptions"
           id="inlineRadio1"
           value={SEARCH_METHOD.ROOT}
-          checked={radioSearchMethod === SEARCH_METHOD.ROOT}
+          checked={searchMethod === SEARCH_METHOD.ROOT}
           onChange={handleSearchMethod}
         />
         <label className="form-check-label" htmlFor="inlineRadio1">
@@ -177,7 +184,7 @@ const RadioSearchMethod = ({
           name="inlineRadioOptions"
           id="inlineRadio2"
           value={SEARCH_METHOD.WORD}
-          checked={radioSearchMethod === SEARCH_METHOD.WORD}
+          checked={searchMethod === SEARCH_METHOD.WORD}
           onChange={handleSearchMethod}
         />
         <label className="form-check-label" htmlFor="inlineRadio2">
@@ -191,17 +198,18 @@ const RadioSearchMethod = ({
 interface FormWordSearchProps {
   onSearchSubmit: () => void;
   searchString: string;
+  dispatchQbAction: Dispatch<qbActionsProps>;
 }
 
 const FormWordSearch = ({
   onSearchSubmit,
   searchString,
+  dispatchQbAction,
 }: FormWordSearchProps) => {
-  const dispatchAction = useQuranBrowser();
   const { t } = useTranslation();
 
   const searchStringHandle = (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatchAction(qbActions.setSearchString(event.target.value));
+    dispatchQbAction(qbActions.setSearchString(event.target.value));
   };
 
   function handleSearchSubmit(e: React.FormEvent<HTMLFormElement>) {
