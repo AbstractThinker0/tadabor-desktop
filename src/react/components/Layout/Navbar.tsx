@@ -34,6 +34,11 @@ function Navbar() {
             </NavLink>
           </li>
           <li className="nav-item">
+            <NavLink className="nav-link" to="/tags">
+              {t("nav_tags")}
+            </NavLink>
+          </li>
+          <li className="nav-item">
             <NavLink className="nav-link" to="/about">
               {t("nav_about")}
             </NavLink>
