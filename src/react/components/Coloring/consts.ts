@@ -1,6 +1,9 @@
 import {
   ActionsUnion,
   createActionPayload,
+  markedNotesType,
+  notesDirectionType,
+  notesType,
   selectedChaptersType,
   verseProps,
 } from "../../types";
@@ -29,6 +32,8 @@ export enum CL_ACTIONS {
   SET_CURRENT_COLOR = "dispatchSetCurrentColor",
   SET_SELECTED_CHAPTERS = "dispatchSetSelectedChapters",
   TOGGLE_SELECT_CHAPTER = "dispatchToggleSelectChapter",
+  SET_SCROLL_KEY = "dispatchSetScrollKey",
+  GOTO_CHAPTER = "dispatchGotoChapter",
 }
 
 export const clActions = {
@@ -80,21 +85,15 @@ export const clActions = {
     CL_ACTIONS.TOGGLE_SELECT_CHAPTER,
     number
   >(CL_ACTIONS.TOGGLE_SELECT_CHAPTER),
+  setScrollKey: createActionPayload<CL_ACTIONS.SET_SCROLL_KEY, string>(
+    CL_ACTIONS.SET_SCROLL_KEY
+  ),
+  gotoChapter: createActionPayload<CL_ACTIONS.GOTO_CHAPTER, number>(
+    CL_ACTIONS.GOTO_CHAPTER
+  ),
 };
 
 export type clActionsProps = ActionsUnion<typeof clActions>;
-
-export interface notesType {
-  [key: string]: string;
-}
-
-export interface notesDirectionType {
-  [key: string]: string;
-}
-
-export interface markedNotesType {
-  [key: string]: boolean;
-}
 
 export enum VS_ACTIONS {
   SET_LOADING_STATE = "dispatchSetLoadingState",
