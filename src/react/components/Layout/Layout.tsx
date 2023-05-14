@@ -1,10 +1,16 @@
 import { PropsWithChildren, useEffect, useRef } from "react";
+
 import { useTranslation } from "react-i18next";
+
+// Import all of Bootstrap's JS
+import "bootstrap";
 
 import Navbar from "./Navbar";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
+import "../../styles/main.scss";
 
 import { QuranProvider } from "../../context/QuranContext";
 import AlertMessage from "./AlertMessage";
