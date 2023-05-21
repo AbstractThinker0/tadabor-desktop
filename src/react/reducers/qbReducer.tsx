@@ -3,7 +3,8 @@ import {
   qbStateProps,
   qbActionsProps,
 } from "../components/QuranBrowser/consts";
-import { qbSearchRoot, qbSearchWord } from "./qbActionSearch";
+import { qbSearchRoot } from "./qbActionSearchRoot";
+import { qbSearchWord } from "./qbActionSearchWord";
 
 function qbReducer(state: qbStateProps, action: qbActionsProps): qbStateProps {
   // ...
@@ -27,10 +28,12 @@ function qbReducer(state: qbStateProps, action: qbActionsProps): qbStateProps {
       return { ...state, searchScope: action.payload };
     }
     case QB_ACTIONS.SEARCH_ROOT_SUBMIT: {
-      return qbSearchRoot(state, action.payload);
+      const { chapterNames, absoluteQuran, quranRoots } = action.payload;
+      return qbSearchRoot(state, chapterNames, absoluteQuran, quranRoots);
     }
     case QB_ACTIONS.SEARCH_WORD_SUBMIT: {
-      return qbSearchWord(state, action.payload);
+      const { chapterNames, allQuranText } = action.payload;
+      return qbSearchWord(state, chapterNames, allQuranText);
     }
     case QB_ACTIONS.GOTO_CHAPTER: {
       return {
