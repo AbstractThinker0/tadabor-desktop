@@ -1,6 +1,6 @@
 import { Dispatch, useEffect, useRef, memo } from "react";
 
-import { IconCircleArrowDownFilled } from "@tabler/icons-react";
+import { IconSelect } from "@tabler/icons-react";
 
 import useQuran from "../../context/QuranContext";
 
@@ -20,7 +20,6 @@ interface DisplayPanelProps {
   searchingChapters: string[];
   searchResult: searchResult[];
   searchError: boolean;
-  selectedRootError: boolean;
   searchingString: string;
   selectChapter: number;
   searchingMethod: string;
@@ -35,7 +34,6 @@ const DisplayPanel = memo(
     searchingChapters,
     searchResult,
     searchError,
-    selectedRootError,
     searchingString,
     selectChapter,
     searchingMethod,
@@ -57,13 +55,12 @@ const DisplayPanel = memo(
     return (
       <div className="browser-display" ref={refListVerses}>
         <div className="card browser-display-card" dir="rtl">
-          {searchResult.length || searchError || selectedRootError ? (
+          {searchResult.length || searchError ? (
             <ListSearchResults
               versesArray={searchResult}
               searchToken={searchingString.trim()}
               searchingScope={searchingScope}
               searchError={searchError}
-              selectedRootError={selectedRootError}
               searchMethod={searchingMethod}
               searchingChapters={searchingChapters}
               searchIndexes={searchIndexes}
@@ -136,12 +133,12 @@ const ListVerses = ({
   return (
     <>
       <ListTitle chapterName={chapterName} />
-      <div className="card-body" ref={listRef}>
+      <div className="card-body browser-display-card-list" ref={listRef}>
         {versesArray.map((verse: verseProps) => (
           <div
             key={verse.key}
             data-id={verse.key}
-            className={`border-bottom pt-1 pb-1 ${
+            className={`border-bottom browser-display-card-list-item ${
               scrollKey === verse.key ? "verse-selected" : ""
             }`}
           >
@@ -157,16 +154,11 @@ ListVerses.displayName = "ListVerses";
 
 interface VerseComponentProps {
   verse: verseProps;
-
   dispatchQbAction: Dispatch<qbActionsProps>;
 }
 
 const VerseComponent = memo(
-  ({
-    verse,
-
-    dispatchQbAction,
-  }: VerseComponentProps) => {
+  ({ verse, dispatchQbAction }: VerseComponentProps) => {
     return (
       <>
         <VerseTextComponent verse={verse} dispatchQbAction={dispatchQbAction} />
@@ -189,10 +181,10 @@ const VerseTextComponent = memo(
       dispatchQbAction(qbActions.setScrollKey(verse.key));
     }
     return (
-      <span className="fs-4">
-        {verse.versetext}{" "}
+      <div className="fs-4">
+        <span>{verse.versetext} </span>
         <span className="btn-verse" onClick={onClickVerse}>
-          {"(" + verse.verseid + ")"}
+          {`(${verse.verseid})`}
         </span>
         <button
           className="btn"
@@ -202,9 +194,9 @@ const VerseTextComponent = memo(
           aria-expanded="false"
           aria-controls={"collapseExample" + verse.key}
         >
-          <IconCircleArrowDownFilled />
+          <IconSelect />
         </button>
-      </span>
+      </div>
     );
   }
 );

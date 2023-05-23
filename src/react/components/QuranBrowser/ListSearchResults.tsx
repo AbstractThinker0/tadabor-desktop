@@ -26,7 +26,6 @@ interface ListSearchResultsProps {
   searchToken: string;
   searchingScope: SEARCH_SCOPE;
   searchError: boolean;
-  selectedRootError: boolean;
   searchMethod: string;
   searchingChapters: string[];
   searchIndexes: searchIndexProps[];
@@ -37,7 +36,6 @@ const ListSearchResults = ({
   versesArray,
   searchToken,
   searchError,
-  selectedRootError,
   searchMethod,
   searchingChapters,
   searchIndexes,
@@ -86,12 +84,12 @@ const ListSearchResults = ({
           searchIndexes={searchIndexes}
         />
       )}
-      <div className="card-body" ref={refListVerses}>
+      <div className="card-body browser-display-card-list" ref={refListVerses}>
         {versesArray.map((verse) => (
           <div
             key={verse.key}
             data-id={verse.key}
-            className={`border-bottom pt-1 pb-1 ${
+            className={`border-bottom browser-display-card-list-item ${
               verse.key === selectedVerse ? "verse-selected" : ""
             }`}
           >
@@ -103,12 +101,7 @@ const ListSearchResults = ({
             />
           </div>
         ))}
-        {(searchError || selectedRootError) && (
-          <SearchErrorsComponent
-            searchError={searchError}
-            selectedRootError={selectedRootError}
-          />
-        )}
+        {searchError && <SearchErrorsComponent searchMethod={searchMethod} />}
       </div>
     </>
   );
@@ -198,7 +191,7 @@ const DerivationsComponent = memo(
               data-bs-toggle="tooltip"
               data-bs-title={root.text}
             >
-              {index ? " -" : " "} {root.name}
+              {`${index ? " -" : " "} ${root.name}`}
             </span>
           ))}
         </span>
@@ -241,21 +234,20 @@ const SearchVerseComponent = memo(
 SearchVerseComponent.displayName = "SearchVerseComponent";
 
 interface SearchErrorsComponentProps {
-  searchError: boolean;
-  selectedRootError: boolean;
+  searchMethod: string;
 }
 
 const SearchErrorsComponent = ({
-  searchError,
-  selectedRootError,
+  searchMethod,
 }: SearchErrorsComponentProps) => {
   const { t } = useTranslation();
   return (
     <div dir="auto">
-      {searchError && <p className="mt-3 text-danger">{t("search_fail")}</p>}
-      {selectedRootError && (
-        <p className="mt-3 text-danger">{t("search_root_error")}</p>
-      )}
+      <p className="mt-3 text-danger">
+        {searchMethod === SEARCH_METHOD.WORD
+          ? t("search_fail")
+          : t("search_root_error")}
+      </p>
     </div>
   );
 };
@@ -296,7 +288,7 @@ const VerseContentComponent = memo(
             className="p-0 border-0 bg-transparent"
             onClick={(e) => handleVerseClick(verse_key)}
           >
-            {verseChapter + ":" + verse.verseid}
+            {`${verseChapter}:${verse.verseid}`}
           </button>
         ) : (
           <button
