@@ -1,6 +1,8 @@
-# Tadabor-desktop: Quran desktop App based on the web App: [tadabor.surge.sh](http://tadabor.surge.sh/)
+# Tadabor-desktop: Quran desktop App
 
 This project is an App that allows you to browse through the Quran and write your notes/reflections below the verses, everything will be saved in the application.
+
+# For a web version check [github.com/EnlightenCode/tadabor](https://github.com/EnlightenCode/tadabor)
 
 ## Table of contents
 
@@ -29,7 +31,7 @@ You are welcome to do a PR or open an issue for requesting new features or repor
 
 ## Known bugs
 
-None.
+- Linux version doesn't have auto-update support unlike windows version, Thus you have to uninstall the app and download the latest version manually from the releases page (Mac version probably have the same issue, can't test it right now as I have no access to a mac machine.)
 
 ## TODO List
 
@@ -43,8 +45,8 @@ None.
 
 - **The creator of the universe for all his favors that if I tried to count I would never be able to number them**
 - [quran-json](https://github.com/risan/quran-json) project for the compilation of chapter names and their transliteration
-- Tanzil project for the Quran text compilation ( Check the bottom of [quran-simple-plain.txt](https://raw.githubusercontent.com/EnlightenCode/tadabor/master/public/res/quran-simple-plain.txt) )
-- Computer Research Center of Islamic Sciences (noorsoft.org) and Tanzil Project (tanzil.info) and Zekr Project (zekr.org) for the Quran roots compilation ( Check the bottom of [quran-root.txt](https://github.com/EnlightenCode/tadabor/blob/master/public/res/quran-root.txt) )
+- Tanzil project for the Quran text compilation
+- Computer Research Center of Islamic Sciences (noorsoft.org) and Tanzil Project (tanzil.info) and Zekr Project (zekr.org) for the Quran roots compilation
 
 ## Local development
 
