@@ -6,6 +6,10 @@
     "type": "git",
     "url": "https://github.com/EnlightenCode/tadabor-desktop.git"
   },
+  "bugs": {
+    "url": "https://github.com/EnlightenCode/tadabor-desktop/issues"
+  },
+  "homepage": "https://github.com/EnlightenCode/tadabor-desktop",
   "description": "A Quran desktop application",
   "main": ".webpack/main",
   "scripts": {
