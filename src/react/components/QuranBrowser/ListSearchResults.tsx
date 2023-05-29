@@ -19,7 +19,7 @@ import useQuran from "../../context/QuranContext";
 import { Tooltip } from "bootstrap";
 import NoteText from "../NoteText";
 import { useTranslation } from "react-i18next";
-import { IconCircleArrowDownFilled } from "@tabler/icons-react";
+import { IconSelect } from "@tabler/icons-react";
 
 interface ListSearchResultsProps {
   versesArray: searchResult[];
@@ -307,7 +307,7 @@ const VerseContentComponent = memo(
           aria-expanded="false"
           aria-controls={"collapseExample" + verse_key}
         >
-          <IconCircleArrowDownFilled />
+          <IconSelect />
         </button>
       </span>
     );
