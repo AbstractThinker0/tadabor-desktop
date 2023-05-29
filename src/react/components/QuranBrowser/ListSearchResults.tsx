@@ -187,7 +187,7 @@ const DerivationsComponent = memo(
             <span
               role="button"
               key={index}
-              onClick={(e) => handleRootClick(root.key)}
+              onClick={() => handleRootClick(root.key)}
               data-bs-toggle="tooltip"
               data-bs-title={root.text}
             >
@@ -286,14 +286,14 @@ const VerseContentComponent = memo(
         {isLinkable ? (
           <button
             className="p-0 border-0 bg-transparent"
-            onClick={(e) => handleVerseClick(verse_key)}
+            onClick={() => handleVerseClick(verse_key)}
           >
             {`${verseChapter}:${verse.verseid}`}
           </button>
         ) : (
           <button
             className="p-0 border-0 bg-transparent"
-            onClick={(e) => handleVerseClick(verse_key)}
+            onClick={() => handleVerseClick(verse_key)}
           >
             {verse.verseid}
           </button>
