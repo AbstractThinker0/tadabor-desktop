@@ -1,5 +1,5 @@
 export interface IAppAPI {
-  getVersion: () => Promise<any>;
+  getVersion: () => Promise<string>;
 }
 
 declare global {
