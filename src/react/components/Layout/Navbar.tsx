@@ -44,6 +44,11 @@ function Navbar() {
             </NavLink>
           </li>
           <li className="nav-item">
+            <NavLink className="nav-link" to="/comparator">
+              {t("nav_comparator")}
+            </NavLink>
+          </li>
+          <li className="nav-item">
             <NavLink className="nav-link" to="/about">
               {t("nav_about")}
             </NavLink>
