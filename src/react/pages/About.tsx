@@ -1,7 +1,11 @@
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 
-const AboutEnglish = ({ appVer }: any) => {
+interface AboutProps {
+  appVer: string;
+}
+
+const AboutEnglish = ({ appVer }: AboutProps) => {
   return (
     <>
       <div className="pt-4 card about-card" dir="ltr">
@@ -85,7 +89,7 @@ const AboutEnglish = ({ appVer }: any) => {
   );
 };
 
-const AboutArabic = ({ appVer }: any) => {
+const AboutArabic = ({ appVer }: AboutProps) => {
   return (
     <>
       <div className="pt-4 card about-card" dir="rtl">
