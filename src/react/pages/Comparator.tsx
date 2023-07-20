@@ -4,12 +4,12 @@ import useQuran from "../context/QuranContext";
 import Display from "../components/Comparator/Display";
 import Menu from "../components/Comparator/Menu";
 
-import transMuhammadAsad from "../../data/trans/Muhammad Asad.json";
+import transMuhammadAsad from "../../data/trans/Muhammad Asad v2.json";
 import transTheMonotheistGroup from "../../data/trans/The Monotheist Group.json";
 
 /*
 const transList: transListProps = {
-  "Muhammad Asad": { url: "/trans/Muhammad Asad.json" },
+  "Muhammad Asad": { url: "/trans/Muhammad Asad v2.json" },
   "The Monotheist Group": { url: "/trans/The Monotheist Group.json" },
 };
 */
