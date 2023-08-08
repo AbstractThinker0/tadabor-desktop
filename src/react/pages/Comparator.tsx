@@ -4,7 +4,7 @@ import useQuran from "../context/QuranContext";
 import Display from "../components/Comparator/Display";
 import Menu from "../components/Comparator/Menu";
 
-import transMuhammadAsad from "../../data/trans/Muhammad Asad v2.json";
+import transMuhammadAsad from "../../data/trans/Muhammad Asad v3.json";
 import transTheMonotheistGroup from "../../data/trans/The Monotheist Group.json";
 
 /*
