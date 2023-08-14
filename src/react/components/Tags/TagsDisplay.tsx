@@ -46,7 +46,7 @@ function TagsDisplay({
 
   const asArray = Object.entries(versesTags);
 
-  const filtered = asArray.filter(([key, value]) => {
+  const filtered = asArray.filter(([key]) => {
     const info = key.split("-");
     return selectedChapters[info[0]] === true;
   });
