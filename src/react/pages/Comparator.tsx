@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RankedVerseProps, translationsProps } from "../types";
 import useQuran from "../context/QuranContext";
 import Display from "../components/Comparator/Display";
@@ -19,6 +19,32 @@ function Comparator() {
   const [currentChapter, setCurrentChapter] = useState("1");
   const [currentVerse, setCurrentVerse] = useState("");
 
+  const [chapterVerses, setChapterVerses] = useState(() => {
+    //
+    const chapterVerses: RankedVerseProps[] = [];
+
+    absoluteQuran.forEach((verse, index) => {
+      if (verse.suraid !== currentChapter) return;
+
+      chapterVerses.push({ ...verse, rank: index });
+    });
+
+    return chapterVerses;
+  });
+
+  useEffect(() => {
+    //
+    const chapterVerses: RankedVerseProps[] = [];
+
+    absoluteQuran.forEach((verse, index) => {
+      if (verse.suraid !== currentChapter) return;
+
+      chapterVerses.push({ ...verse, rank: index });
+    });
+
+    setChapterVerses(chapterVerses);
+  }, [currentChapter, absoluteQuran]);
+
   const translations: translationsProps = {
     "Muhammad Asad": transMuhammadAsad,
     "The Monotheist Group": transTheMonotheistGroup,
@@ -31,14 +57,6 @@ function Comparator() {
   const selectVerse = (verseKey: string) => {
     setCurrentVerse(verseKey);
   };
-
-  const chapterVerses: RankedVerseProps[] = [];
-
-  absoluteQuran.forEach((verse, index) => {
-    if (verse.suraid !== currentChapter) return;
-
-    chapterVerses.push({ ...verse, rank: index });
-  });
 
   return (
     <div className="comparator">
