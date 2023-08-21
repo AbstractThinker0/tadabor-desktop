@@ -3,15 +3,13 @@
 
 @import "./variables.scss";
 
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
-    Arial, sans-serif;
-}
-
 main {
   display: flex;
   flex-direction: column;
   height: 100vh;
+
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  font-size: larger;
 
   .navbar-nav {
     padding-right: 0;

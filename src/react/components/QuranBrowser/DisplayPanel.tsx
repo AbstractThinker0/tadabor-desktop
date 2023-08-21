@@ -11,7 +11,7 @@ import { IconSelect } from "@tabler/icons-react";
 
 import useQuran from "../../context/QuranContext";
 
-import { verseProps, searchIndexProps } from "../../types";
+import { searchIndexProps, verseProps } from "../../types";
 import { qbActions, qbActionsProps, searchResult } from "./consts";
 
 import ListSearchResults from "./ListSearchResults";
@@ -109,7 +109,7 @@ const ListVerses = ({
 }: ListVersesProps) => {
   const { chapterNames, allQuranText } = useQuran();
 
-  const [stateVerses, setStateVerse] = useState(
+  const [stateVerses, setStateVerses] = useState(
     allQuranText[selectChapter - 1].verses
   );
 
@@ -119,7 +119,7 @@ const ListVerses = ({
 
   useEffect(() => {
     startTransition(() => {
-      setStateVerse(allQuranText[selectChapter - 1].verses);
+      setStateVerses(allQuranText[selectChapter - 1].verses);
     });
   }, [selectChapter, allQuranText]);
 
@@ -200,7 +200,7 @@ const VerseTextComponent = memo(
       dispatchQbAction(qbActions.setScrollKey(verse.key));
     }
     return (
-      <div className="fs-4">
+      <div className="fs-3">
         <span>{verse.versetext} </span>
         <span className="btn-verse" onClick={onClickVerse}>
           {`(${verse.verseid})`}
