@@ -3,7 +3,10 @@
 
 @import "./variables.scss";
 
-@import url("https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@500&display=swap");
+@font-face {
+  font-family: "Scheherazade New";
+  src: url("../../assets/fonts/ScheherazadeNew-Medium.ttf");
+}
 
 main {
   display: flex;
