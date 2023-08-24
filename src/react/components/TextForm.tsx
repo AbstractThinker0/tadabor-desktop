@@ -371,7 +371,7 @@ const TextAreaComponent = ({
   return (
     <textarea
       ref={refTextarea}
-      className="form-control mb-2"
+      className="form-control mb-2 fs-5"
       id="textInput"
       placeholder={placeholder ? placeholder : t("text_form")}
       name={inputKey}
