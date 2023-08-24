@@ -36,13 +36,14 @@ The app is in beta, which means you may encounter occasional bugs. We strongly r
 
 ## Known bugs
 
-- The Linux version lacks auto-update functionality, unlike its Windows counterpart. As a result, users must uninstall the application and manually download the latest version from the releases page. Please note that the Mac version may encounter a similar issue, although I am unable to verify it at present due to a lack of access to a Mac machine.
+- The Linux/Mac version lacks auto-update functionality, unlike its Windows counterpart. As a result, users must uninstall the application and manually download the latest version from the releases page.
 
 ## TODO List
 
 - Add more searching methods (Tashkeel, multiple Surahs search... etc). (Partially implemented)
+- Add a settings menu that gives the ability to the users to choose font size/colors... etc.
 - Add unit tests or similar to assure that everything works as expected.
-- Revamp the interface for a better user experience.
+- Revamp the interface for a better user experience (Also implement a Dark theme switch).
 - Document code and improve readability when possible.
 - Document all the features and how they can be used.
 
