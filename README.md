@@ -1,8 +1,8 @@
-# Tadabor-desktop: Quran desktop App
+# Tadabor-desktop: Quran Desktop App
 
-This project is an App that allows you to browse through the Quran and write your notes/reflections below the verses, everything will be saved in the application.
+This project is an App that allows you to browse the Quran and write your notes/reflections below the verses, everything will be saved in the application.
 
-# For a web version check [github.com/EnlightenCode/tadabor](https://github.com/EnlightenCode/tadabor)
+# For a web version check [github.com/EnlightenCode/tadabor](https://github.com/AbstractThinker0/tadabor)
 
 ## Table of contents
 
@@ -40,9 +40,9 @@ The app is in beta, which means you may encounter occasional bugs. We strongly r
 
 ## TODO List
 
-- Add more searching methods (Tashkeel, multiple Surahs search... etc). (Partially implemented)
-- Add a settings menu that gives the ability to the users to choose font size/colors... etc.
-- Add unit tests or similar to assure that everything works as expected.
+- Add more searching methods (Tashkeel, multiple Surahs search... etc.). (Partially implemented)
+- Add a settings menu that allows the users to choose font size/colors... etc.
+- Add unit tests or similar to make sure that everything works as expected.
 - Revamp the interface for a better user experience (Also implement a Dark theme switch).
 - Document code and improve readability when possible.
 - Document all the features and how they can be used.
@@ -52,7 +52,7 @@ The app is in beta, which means you may encounter occasional bugs. We strongly r
 - **The creator of the universe for all his favors that if I tried to count I would never be able to number them**
 - [quran-json](https://github.com/risan/quran-json) project for the compilation of chapter names and their transliteration
 - Tanzil project for the Quran text compilation
-- Computer Research Center of Islamic Sciences (noorsoft.org) and Tanzil Project (tanzil.info) and Zekr Project (zekr.org) for the Quran roots compilation
+- Computer Research Center of Islamic Sciences (noorsoft.org), Tanzil Project (tanzil.info) and Zekr Project (zekr.org) for the Quran roots compilation
 
 ## Local development
 
