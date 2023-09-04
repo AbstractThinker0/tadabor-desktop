@@ -2,7 +2,7 @@
 
 This project is an App that allows you to browse the Quran and write your notes/reflections below the verses, everything will be saved in the application.
 
-# For a web version check [github.com/EnlightenCode/tadabor](https://github.com/AbstractThinker0/tadabor)
+# For a web version check [github.com/AbstractThinker0/tadabor](https://github.com/AbstractThinker0/tadabor)
 
 ## Table of contents
 
