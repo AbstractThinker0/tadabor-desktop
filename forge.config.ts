@@ -25,7 +25,7 @@ const config: ForgeConfig = {
         name: "tadabor",
         setupIcon: __dirname + "/src/tadabor.ico",
         iconUrl:
-          "https://raw.githubusercontent.com/EnlightenCode/tadabor-desktop/master/src/tadabor.ico",
+          "https://raw.githubusercontent.com/AbstractThinker0/tadabor-desktop/master/src/tadabor.ico",
       },
     },
   ],
@@ -53,7 +53,7 @@ const config: ForgeConfig = {
       name: "@electron-forge/publisher-github",
       config: {
         repository: {
-          owner: "EnlightenCode",
+          owner: "AbstractThinker0",
           name: "tadabor-desktop",
         },
         prerelease: false,

@@ -20,7 +20,7 @@ This project is an App that allows you to browse the Quran and write your notes/
 
 Download and install:
 
-- Latest release: check the repo's [releases page](https://github.com/EnlightenCode/tadabor-desktop/releases)
+- Latest release: check the repo's [releases page](https://github.com/AbstractThinker0/tadabor-desktop/releases)
 
 ## How to use
 

@@ -4,12 +4,12 @@
   "version": "0.6.6",
   "repository": {
     "type": "git",
-    "url": "https://github.com/EnlightenCode/tadabor-desktop.git"
+    "url": "https://github.com/AbstractThinker0/tadabor-desktop.git"
   },
   "bugs": {
-    "url": "https://github.com/EnlightenCode/tadabor-desktop/issues"
+    "url": "https://github.com/AbstractThinker0/tadabor-desktop/issues"
   },
-  "homepage": "https://github.com/EnlightenCode/tadabor-desktop",
+  "homepage": "https://github.com/AbstractThinker0/tadabor-desktop",
   "description": "A Quran desktop application",
   "main": ".webpack/main",
   "scripts": {
@@ -20,7 +20,7 @@
     "lint": "eslint --ext .ts,.tsx ."
   },
   "keywords": [],
-  "author": "EnlightenCode",
+  "author": "AbstractThinker0",
   "license": "MIT",
   "devDependencies": {
     "@electron-forge/cli": "^6.4.1",

@@ -12,7 +12,7 @@ const AboutEnglish = ({ appVer }: AboutProps) => {
         <p className="text-center">
           Check out the project's{" "}
           <a
-            href="https://github.com/EnlightenCode/tadabor-desktop"
+            href="https://github.com/AbstractThinker0/tadabor-desktop"
             target="_blank"
             rel="noreferrer"
           >
@@ -20,13 +20,13 @@ const AboutEnglish = ({ appVer }: AboutProps) => {
           </a>
         </p>
         <div className="card-body">
-          <h5>Intro</h5>
+          <h5>Intro:</h5>
           <p>
             This project is an App that allows you to browse through the Quran
             and write your notes/reflections below the verses, everything will
             be saved in the application.
           </p>
-          <h5>How to use</h5>
+          <h5>How to use:</h5>
           <p>
             Simply check Quran Browser on the app, you can click the down arrow
             button next to any verse to open a form where you can enter your
@@ -34,7 +34,7 @@ const AboutEnglish = ({ appVer }: AboutProps) => {
             the data will be saved on the application and unistalling the app
             will erase the data you have saved.
           </p>
-          <h5>Disclaimer</h5>
+          <h5>Disclaimer:</h5>
           <p>
             The app is in beta, which means you may encounter occasional bugs.
             We strongly recommend keeping a backup of any data you save while
@@ -45,7 +45,7 @@ const AboutEnglish = ({ appVer }: AboutProps) => {
             the completeness of search results based on sentences/roots has not
             been extensively tested.
           </p>
-          <h5>Credits</h5>
+          <h5>Credits:</h5>
           <ul>
             <li className="fw-bold">
               The creator of the universe for all his favors that if I tried to
@@ -71,7 +71,7 @@ const AboutEnglish = ({ appVer }: AboutProps) => {
             </li>
           </ul>
 
-          <h5>Future project</h5>
+          <h5>Future project:</h5>
           <p>
             Once all features of this project are implemented, it will serve as
             the foundation for another project that aims to create a platform
@@ -96,7 +96,7 @@ const AboutArabic = ({ appVer }: AboutProps) => {
         <p className="text-center">
           إطلع على موقع البرنامج في{" "}
           <a
-            href="https://github.com/EnlightenCode/tadabor-desktop"
+            href="https://github.com/AbstractThinker0/tadabor-desktop"
             target="_blank"
             rel="noreferrer"
           >
