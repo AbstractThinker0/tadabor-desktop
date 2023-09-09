@@ -5,59 +5,38 @@ import LanguageButton from "./LanguageButton";
 function Navbar() {
   const { t } = useTranslation();
   return (
-    <nav className="navbar navbar-expand navbar-dark bg-dark">
-      <div className="container-fluid">
-        <ul className="navbar-nav ">
-          <li className="nav-item">
-            <NavLink className="nav-link" aria-current="page" to="/">
-              {t("nav_browser")}
-            </NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink className="nav-link" to="/roots">
-              {t("nav_roots")}
-            </NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink className="nav-link" to="/notes">
-              {t("nav_notes")}
-            </NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink className="nav-link" to="/translation">
-              {t("nav_translation")}
-            </NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink className="nav-link" to="/coloring">
-              {t("nav_coloring")}
-            </NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink className="nav-link" to="/tags">
-              {t("nav_tags")}
-            </NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink className="nav-link" to="/inspector">
-              {t("nav_inspector")}
-            </NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink className="nav-link" to="/comparator">
-              {t("nav_comparator")}
-            </NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink className="nav-link" to="/about">
-              {t("nav_about")}
-            </NavLink>
-          </li>
-        </ul>
-        <LanguageButton />
+    <nav>
+      <div className="nav-list">
+        <div className="nav-list-start">
+          <NavItem to="/" label={t("nav_browser")} />
+          <NavItem to="/roots" label={t("nav_roots")} />
+          <NavItem to="/notes" label={t("nav_notes")} />
+          <NavItem to="/translation" label={t("nav_translation")} />
+          <NavItem to="/coloring" label={t("nav_coloring")} />
+          <NavItem to="/tags" label={t("nav_tags")} />
+          <NavItem to="/inspector" label={t("nav_inspector")} />
+          <NavItem to="/comparator" label={t("nav_comparator")} />
+          <NavItem to="/about" label={t("nav_about")} />
+        </div>
+        <div className="nav-list-end">
+          <LanguageButton />
+        </div>
       </div>
     </nav>
   );
 }
+
+interface NavItemProps {
+  label: string;
+  to: string;
+}
+
+const NavItem = ({ label, to }: NavItemProps) => {
+  return (
+    <div className="nav-list-start-item">
+      <NavLink to={to}>{label}</NavLink>
+    </div>
+  );
+};
 
 export default Navbar;
