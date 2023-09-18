@@ -46,7 +46,7 @@
     "node-loader": "^2.0.0",
     "postcss-loader": "^7.0.2",
     "raw-loader": "^4.0.2",
-    "sass": "^1.58.3",
+    "sass": "^1.67.0",
     "sass-loader": "^13.2.0",
     "style-loader": "^3.3.3",
     "ts-loader": "^9.4.2",
