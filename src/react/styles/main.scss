@@ -25,8 +25,8 @@ main {
 
     padding-left: 0.5rem;
     padding-right: 0.5rem;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
 
     .nav-list {
       display: flex;
@@ -34,6 +34,7 @@ main {
 
       &-start {
         display: flex;
+        flex-wrap: wrap;
         gap: 0.5rem;
 
         &-item {
