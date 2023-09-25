@@ -3,6 +3,8 @@ import type { Configuration } from "webpack";
 import { rules } from "./webpack.rules";
 import { plugins } from "./webpack.plugins";
 
+import path from "path";
+
 rules.push({
   test: /\.(scss|css)$/,
   use: [
@@ -26,6 +28,7 @@ export const rendererConfig: Configuration = {
   },
   plugins,
   resolve: {
+    alias: { "@": path.resolve(__dirname, "src/react") },
     extensions: [".js", ".ts", ".jsx", ".tsx", ".css", ".scss"],
   },
 };
