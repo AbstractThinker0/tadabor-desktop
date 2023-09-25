@@ -17,43 +17,7 @@ main {
   font-size: larger;
   line-height: normal;
 
-  background-color: var(--color-primary);
-
-  nav {
-    //background-color: #c2ccd5;
-    background-color: rgb(33, 37, 41);
-
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    padding-top: 0.4rem;
-    padding-bottom: 0.4rem;
-
-    .nav-list {
-      display: flex;
-      justify-content: space-between;
-
-      &-start {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-
-        &-item {
-          a {
-            text-decoration: none;
-            padding-left: 0.1rem;
-            padding-right: 0.1rem;
-            color: rgb(190, 190, 190);
-          }
-
-          a.active {
-            color: black;
-            background-color: var(--color-primary);
-            border-radius: 0.3rem;
-          }
-        }
-      }
-    }
-  }
+  @import "./layout.scss";
 }
 
 @import "./pages/browser.scss";
