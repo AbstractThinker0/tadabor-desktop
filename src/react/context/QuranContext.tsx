@@ -5,7 +5,7 @@ import allQuranText from "../../data/quran_v2.json";
 import quranRoots from "../../data/quranRoots.json";
 import absoluteQuran from "../../data/absoluteQuran.json";
 
-import { chapterProps, quranProps, rootProps, verseProps } from "../types";
+import { chapterProps, quranProps, rootProps, verseProps } from "@/types";
 
 type QuranContent = {
   chapterNames: chapterProps[];
