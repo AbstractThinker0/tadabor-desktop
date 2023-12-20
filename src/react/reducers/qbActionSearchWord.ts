@@ -1,34 +1,6 @@
 import { qbStateProps } from "@/components/QuranBrowser/consts";
-import {
-  chapterProps,
-  quranProps,
-  verseProps,
-  verseMatchResult,
-} from "@/types";
-import { getMatches, onlySpaces, removeDiacritics } from "@/util/util";
-
-const searchVerse = (
-  verse: verseProps,
-  searchToken: string,
-  searchIdentical: boolean,
-  searchDiacritics: boolean
-) => {
-  const result = getMatches(verse.versetext, searchToken, {
-    ignoreDiacritics: !searchDiacritics,
-    matchIdentical: searchIdentical,
-  });
-
-  if (result) {
-    return {
-      key: verse.key,
-      suraid: verse.suraid,
-      verseid: verse.verseid,
-      verseParts: result,
-    };
-  }
-
-  return false;
-};
+import { chapterProps, quranProps, verseMatchResult } from "@/types";
+import { searchVerse, onlySpaces, removeDiacritics } from "@/util/util";
 
 export function qbSearchWord(
   state: qbStateProps,
