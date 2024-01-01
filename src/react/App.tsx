@@ -9,6 +9,7 @@ import YourNotes from "./pages/YourNotes";
 import Tags from "./pages/Tags";
 import Inspector from "./pages/Inspector";
 import Comparator from "./pages/Comparator";
+import Searcher from "./pages/Searcher";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
       <Route path="/tags" element={<Tags />} />
       <Route path="/inspector" element={<Inspector />} />
       <Route path="/comparator" element={<Comparator />} />
+      <Route path="/searcher" element={<Searcher />} />
       <Route path="/about" element={<About />} />
       <Route path="*" element={<QuranBrowser />} />
     </Routes>
