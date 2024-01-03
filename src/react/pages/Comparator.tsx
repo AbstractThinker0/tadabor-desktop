@@ -1,24 +1,24 @@
 import { useEffect, useState } from "react";
-import { RankedVerseProps, translationsProps } from "../types";
-import useQuran from "../context/QuranContext";
-import Display from "../components/Comparator/Display";
-import Menu from "../components/Comparator/Menu";
 
-import transMuhammadAsad from "../../data/trans/Muhammad Asad v3.json";
-import transTheMonotheistGroup from "../../data/trans/The Monotheist Group.json";
+import { RankedVerseProps, translationsProps } from "@/types";
+import useQuran from "@/context/QuranContext";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { fetchAllTranslations } from "@/store/slices/translations";
 
-/*
-const transList: transListProps = {
-  "Muhammad Asad": { url: "/trans/Muhammad Asad v2.json" },
-  "The Monotheist Group": { url: "/trans/The Monotheist Group.json" },
-};
-*/
+import LoadingSpinner from "@/components/LoadingSpinner";
+import Display from "@/components/Comparator/Display";
+import Menu from "@/components/Comparator/Menu";
 
 function Comparator() {
   const quranService = useQuran();
   const [currentChapter, setCurrentChapter] = useState("1");
   const [currentVerse, setCurrentVerse] = useState("");
+  const { loading, data, complete, error } = useAppSelector(
+    (state) => state.translations
+  );
+  const dispatch = useAppDispatch();
 
+  const [stateTrans, setStateTrans] = useState<translationsProps>(data);
   const [chapterVerses, setChapterVerses] = useState(() => {
     //
     const chapterVerses: RankedVerseProps[] = [];
@@ -45,18 +45,30 @@ function Comparator() {
     setChapterVerses(chapterVerses);
   }, [currentChapter]);
 
-  const translations: translationsProps = {
-    "Muhammad Asad": transMuhammadAsad,
-    "The Monotheist Group": transTheMonotheistGroup,
+  useEffect(() => {
+    if (complete) {
+      setStateTrans(data);
+    } else if (!loading) {
+      dispatch(fetchAllTranslations());
+    }
+  }, [loading, complete, dispatch, data]);
+
+  const selectVerse = (verseKey: string) => {
+    setCurrentVerse(verseKey);
   };
 
   const setChapter = (chapterID: string) => {
     setCurrentChapter(chapterID);
   };
 
-  const selectVerse = (verseKey: string) => {
-    setCurrentVerse(verseKey);
-  };
+  if (error)
+    return (
+      <div dir="auto" className="text-center">
+        Failed to load translations, try reloading the page.
+      </div>
+    );
+
+  if (!complete) return <LoadingSpinner />;
 
   return (
     <div className="comparator">
@@ -69,7 +81,7 @@ function Comparator() {
         currentChapter={currentChapter}
         currentVerse={currentVerse}
         chapterVerses={chapterVerses}
-        transVerses={translations}
+        transVerses={stateTrans}
         handleSelectVerse={selectVerse}
       />
     </div>

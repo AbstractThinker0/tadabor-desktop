@@ -3,6 +3,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
 import verseNotesReducer from "./slices/verseNotes";
 import transNotesReducer from "./slices/transNotes";
+import translationsReducer from "./slices/translations";
 import rootNotesReducer from "./slices/rootNotes";
 import searcherPageReducer from "./slices/searcherPage";
 
@@ -10,6 +11,7 @@ const store = configureStore({
   reducer: {
     verseNotes: verseNotesReducer,
     transNotes: transNotesReducer,
+    translations: translationsReducer,
     rootNotes: rootNotesReducer,
     searcherPage: searcherPageReducer,
   },
