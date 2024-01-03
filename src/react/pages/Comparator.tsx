@@ -15,7 +15,7 @@ const transList: transListProps = {
 */
 
 function Comparator() {
-  const { absoluteQuran } = useQuran();
+  const quranService = useQuran();
   const [currentChapter, setCurrentChapter] = useState("1");
   const [currentVerse, setCurrentVerse] = useState("");
 
@@ -23,7 +23,7 @@ function Comparator() {
     //
     const chapterVerses: RankedVerseProps[] = [];
 
-    absoluteQuran.forEach((verse, index) => {
+    quranService.absoluteQuran.forEach((verse, index) => {
       if (verse.suraid !== currentChapter) return;
 
       chapterVerses.push({ ...verse, rank: index });
@@ -36,14 +36,14 @@ function Comparator() {
     //
     const chapterVerses: RankedVerseProps[] = [];
 
-    absoluteQuran.forEach((verse, index) => {
+    quranService.absoluteQuran.forEach((verse, index) => {
       if (verse.suraid !== currentChapter) return;
 
       chapterVerses.push({ ...verse, rank: index });
     });
 
     setChapterVerses(chapterVerses);
-  }, [currentChapter, absoluteQuran]);
+  }, [currentChapter]);
 
   const translations: translationsProps = {
     "Muhammad Asad": transMuhammadAsad,
