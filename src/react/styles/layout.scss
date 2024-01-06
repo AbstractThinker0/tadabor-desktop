@@ -3,8 +3,8 @@ nav {
 
   padding-left: 0.5rem;
   padding-right: 0.5rem;
-  padding-top: 0.4rem;
-  padding-bottom: 0.4rem;
+  padding-top: 0.3rem;
+  padding-bottom: 0.3rem;
 
   .nav-list {
     display: flex;
@@ -18,8 +18,8 @@ nav {
       &-item {
         a {
           text-decoration: none;
-          padding-left: 0.1rem;
-          padding-right: 0.1rem;
+          padding-left: 0.3vw;
+          padding-right: 0.3vw;
           color: rgb(190, 190, 190);
         }
 
