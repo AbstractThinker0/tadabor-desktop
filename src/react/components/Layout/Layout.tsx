@@ -10,9 +10,9 @@ import Navbar from "./Navbar";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import "../../styles/main.scss";
+import "@/styles/main.scss";
 
-import { QuranProvider } from "../../context/QuranContext";
+import { QuranProvider } from "@/context/QuranProvider";
 import AlertMessage from "./AlertMessage";
 
 function Layout({ children }: PropsWithChildren) {

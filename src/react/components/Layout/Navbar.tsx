@@ -2,8 +2,9 @@ import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
 import LanguageButton from "./LanguageButton";
 
-function Navbar() {
+const Navbar = () => {
   const { t } = useTranslation();
+
   return (
     <nav>
       <div className="nav-list">
@@ -25,7 +26,7 @@ function Navbar() {
       </div>
     </nav>
   );
-}
+};
 
 interface NavItemProps {
   label: string;

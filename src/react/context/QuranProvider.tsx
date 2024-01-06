@@ -1,6 +1,5 @@
 import {
   createContext,
-  useContext,
   PropsWithChildren,
   useRef,
   useState,
@@ -10,7 +9,7 @@ import {
 import quranClass from "@/util/quranService";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
-const QuranContext = createContext<quranClass | null>(null);
+export const QuranContext = createContext<quranClass | null>(null);
 
 export const QuranProvider = ({ children }: PropsWithChildren) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -63,15 +62,3 @@ export const QuranProvider = ({ children }: PropsWithChildren) => {
     </QuranContext.Provider>
   );
 };
-
-const useQuran = () => {
-  const quranInstance = useContext(QuranContext);
-
-  if (!quranInstance) {
-    throw new Error("useQuran must be used within a QuranProvider");
-  }
-
-  return quranInstance;
-};
-
-export default useQuran;

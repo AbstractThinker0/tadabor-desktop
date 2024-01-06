@@ -19,12 +19,12 @@ export const fetchAllTranslations = createAsyncThunk(
   async () => {
     const transData: translationsProps = {};
 
-    transData["Muhammad Asad"] = await import(
-      "../../../data/trans/Muhammad Asad v3.json"
-    );
-    transData["The Monotheist Group"] = await import(
-      "../../../data/trans/The Monotheist Group.json"
-    );
+    transData["Muhammad Asad"] = (
+      await import("../../../data/trans/Muhammad Asad v3.json")
+    ).default;
+    transData["The Monotheist Group"] = (
+      await import("../../../data/trans/The Monotheist Group.json")
+    ).default;
 
     return { transData };
   }

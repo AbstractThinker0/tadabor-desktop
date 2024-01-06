@@ -2,24 +2,28 @@ import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
-import useQuran from "@/context/QuranContext";
-import { useAppDispatch, getAllNotes, useAppSelector } from "@/store";
+import useQuran from "@/context/useQuran";
+import {
+  useAppDispatch,
+  getAllNotesKeys,
+  useAppSelector,
+  selectNote,
+} from "@/store";
 import { verseNotesActions } from "@/store/slices/verseNotes";
-import { NoteProp } from "@/types";
 import { dbFuncs } from "@/util/db";
 
 import { FormComponent, TextComponent } from "@/components/TextForm";
 
 const VerseNotes = () => {
-  const myNotes = useAppSelector(getAllNotes());
+  const myNotes = useAppSelector(getAllNotesKeys);
   const { t } = useTranslation();
 
   return (
     <>
-      {Object.keys(myNotes).length ? (
+      {myNotes.length ? (
         <>
-          {Object.keys(myNotes).map((key) => (
-            <NoteComponent verseNote={myNotes[key]} verseKey={key} key={key} />
+          {myNotes.map((key) => (
+            <NoteComponent verseKey={key} key={key} />
           ))}
         </>
       ) : (
@@ -33,13 +37,15 @@ const VerseNotes = () => {
 
 interface NoteComponentProps {
   verseKey: string;
-  verseNote: NoteProp;
 }
 
-function NoteComponent({ verseKey, verseNote }: NoteComponentProps) {
+function NoteComponent({ verseKey }: NoteComponentProps) {
   const quranService = useQuran();
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
+
+  const verseNote = useAppSelector(selectNote(verseKey));
+
   const { text, dir } = verseNote;
 
   const [stateEditable, setStateEditable] = useState(text ? false : true);
@@ -79,7 +85,7 @@ function NoteComponent({ verseKey, verseNote }: NoteComponentProps) {
     [dispatch]
   );
 
-  const handleEditClick = useCallback((inputKey: string) => {
+  const handleEditClick = useCallback(() => {
     setStateEditable(true);
   }, []);
 
