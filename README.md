@@ -2,8 +2,6 @@
 
 This project is an App that allows you to browse the Quran and write your notes/reflections below the verses, everything will be saved in the application.
 
-# For a web version check [github.com/AbstractThinker0/tadabor](https://github.com/AbstractThinker0/tadabor)
-
 ## Table of contents
 
 - [Install](#Install)
@@ -36,16 +34,12 @@ The app is in beta, which means you may encounter occasional bugs. We strongly r
 
 ## Known bugs
 
-- The Linux/Mac version lacks auto-update functionality, unlike its Windows counterpart. As a result, users must uninstall the application and manually download the latest version from the releases page.
+- unlike its Windows counterpart the Linux/Mac version lacks auto-update functionality. As a result, users need to uninstall the application and manually download the latest version from the releases page when there is a new release.
 
 ## TODO List
 
 - Add more searching methods (Tashkeel, multiple Surahs search... etc.). (Partially implemented)
-- Add a settings menu that allows the users to choose font size/colors... etc.
-- Add unit tests or similar to make sure that everything works as expected.
-- Revamp the interface for a better user experience (Also implement a Dark theme switch).
-- Document code and improve readability when possible.
-- Document all the features and how they can be used.
+- Improve the interface for a better user experience.
 
 ## Credits
 
