@@ -1,30 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import { translationsProps } from "@/types";
-
-/*
-interface transListProps {
-  [key: string]: { url: string };
-}
-
-const transList: transListProps = {
-  "Muhammad Asad": { url: "/trans/Muhammad Asad v3.json" },
-  "The Monotheist Group": { url: "/trans/The Monotheist Group.json" },
-};
-*/
+import { fetchTranslations } from "@/util/fetchData";
 
 // Create a single async thunk for multiple fetch requests
 export const fetchAllTranslations = createAsyncThunk(
   "translations/fetchAllTranslations",
   async () => {
-    const transData: translationsProps = {};
-
-    transData["Muhammad Asad"] = (
-      await import("../../../data/trans/Muhammad Asad v3.json")
-    ).default;
-    transData["The Monotheist Group"] = (
-      await import("../../../data/trans/The Monotheist Group.json")
-    ).default;
+    const transData: translationsProps = await fetchTranslations();
 
     return { transData };
   }

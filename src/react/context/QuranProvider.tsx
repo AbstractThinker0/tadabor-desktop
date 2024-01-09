@@ -6,6 +6,7 @@ import {
   useEffect,
 } from "react";
 
+import { fetchChapters, fetchQuran, fetchRoots } from "@/util/fetchData";
 import quranClass from "@/util/quranService";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
@@ -20,23 +21,23 @@ export const QuranProvider = ({ children }: PropsWithChildren) => {
 
     async function fetchData() {
       try {
-        const chaptersData = await import("../../data/chapters.json");
+        let response: any = await fetchChapters();
 
         if (clientLeft) return;
 
-        quranInstance.current.setChapters(chaptersData.default);
+        quranInstance.current.setChapters(response);
 
-        const qurandata = await import("../../data/quran_v2.json");
-
-        if (clientLeft) return;
-
-        quranInstance.current.setQuran(qurandata.default);
-
-        const rootsData = await import("../../data/quranRoots.json");
+        response = await fetchQuran();
 
         if (clientLeft) return;
 
-        quranInstance.current.setRoots(rootsData.default);
+        quranInstance.current.setQuran(response);
+
+        response = await fetchRoots();
+
+        if (clientLeft) return;
+
+        quranInstance.current.setRoots(response);
       } catch (error) {
         fetchData();
         return;
