@@ -1,11 +1,6 @@
 import { useTranslation } from "react-i18next";
-import { useEffect, useState } from "react";
 
-interface AboutProps {
-  appVer: string;
-}
-
-const AboutEnglish = ({ appVer }: AboutProps) => {
+const AboutEnglish = () => {
   return (
     <>
       <div className="pt-4 card about-card" dir="ltr">
@@ -84,12 +79,12 @@ const AboutEnglish = ({ appVer }: AboutProps) => {
         </div>
       </div>
 
-      <p className="text-center text-muted">App Version {appVer}</p>
+      <p className="text-center text-muted">App Version {APP_VERSION}</p>
     </>
   );
 };
 
-const AboutArabic = ({ appVer }: AboutProps) => {
+const AboutArabic = () => {
   return (
     <>
       <div className="pt-4 card about-card" dir="rtl">
@@ -159,29 +154,19 @@ const AboutArabic = ({ appVer }: AboutProps) => {
         </div>
       </div>
 
-      <p className="text-center text-muted">نسخة التطبيق {appVer}</p>
+      <p className="text-center text-muted">نسخة التطبيق {APP_VERSION}</p>
     </>
   );
 };
 
 function About() {
   const { i18n } = useTranslation();
-  const [appVer, SetAppVer] = useState("");
-
-  useEffect(() => {
-    const LoadVer = async () => {
-      const response = await window.app.getVersion();
-      SetAppVer(response);
-    };
-
-    LoadVer();
-  }, []);
 
   if (i18n.resolvedLanguage === "en") {
-    return <AboutEnglish appVer={appVer} />;
+    return <AboutEnglish />;
   }
 
-  return <AboutArabic appVer={appVer} />;
+  return <AboutArabic />;
 }
 
 export default About;
