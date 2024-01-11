@@ -8,86 +8,85 @@ function YourNotes() {
   const { t } = useTranslation();
 
   return (
-    <div className="yournotes p-2">
+    <div className="yournotes">
       <ul
         className="nav nav-tabs justify-content-center"
         id="myTab"
         role="tablist"
       >
-        <li className="nav-item" role="presentation">
-          <button
-            className="nav-link active"
-            id="verses-tab"
-            data-bs-toggle="tab"
-            data-bs-target="#verses-tab-pane"
-            type="button"
-            role="tab"
-            aria-controls="verses-tab-pane"
-            aria-selected="true"
-          >
-            {t("notes_verses")}
-          </button>
-        </li>
-        <li className="nav-item" role="presentation">
-          <button
-            className="nav-link"
-            id="roots-tab"
-            data-bs-toggle="tab"
-            data-bs-target="#roots-tab-pane"
-            type="button"
-            role="tab"
-            aria-controls="roots-tab-pane"
-            aria-selected="false"
-          >
-            {t("notes_roots")}
-          </button>
-        </li>
-        <li className="nav-item" role="presentation">
-          <button
-            className="nav-link"
-            id="trans-tab"
-            data-bs-toggle="tab"
-            data-bs-target="#trans-tab-pane"
-            type="button"
-            role="tab"
-            aria-controls="trans-tab-pane"
-            aria-selected="false"
-          >
-            {t("notes_trans")}
-          </button>
-        </li>
+        <TabButton
+          text={t("notes_verses")}
+          identifier="verses"
+          extraClass="active"
+          ariaSelected={true}
+        />
+        <TabButton text={t("notes_roots")} identifier="roots" />
+        <TabButton text={t("notes_trans")} identifier="trans" />
       </ul>
       <div className="tab-content" id="myTabContent">
-        <div
-          className="tab-pane fade show active"
-          id="verses-tab-pane"
-          role="tabpanel"
-          aria-labelledby="verses-tab"
-          tabIndex={0}
-        >
+        <TabPanel identifier="verses" extraClass="show active">
           <VerseNotes />
-        </div>
-        <div
-          className="tab-pane fade"
-          id="roots-tab-pane"
-          role="tabpanel"
-          aria-labelledby="roots-tab"
-          tabIndex={0}
-        >
+        </TabPanel>
+        <TabPanel identifier="roots">
           <RootNotes />
-        </div>
-        <div
-          className="tab-pane fade"
-          id="trans-tab-pane"
-          role="tabpanel"
-          aria-labelledby="trans-tab"
-          tabIndex={0}
-        >
+        </TabPanel>
+        <TabPanel identifier="trans">
           <TransNotes />
-        </div>
+        </TabPanel>
       </div>
     </div>
   );
 }
+
+interface TabButtonProps {
+  text: string;
+  identifier: string;
+  extraClass?: string;
+  ariaSelected?: boolean;
+}
+
+const TabButton = ({
+  text,
+  identifier,
+  extraClass = "",
+  ariaSelected,
+}: TabButtonProps) => {
+  return (
+    <li className="nav-item" role="presentation">
+      <button
+        className={"nav-link ".concat(extraClass)}
+        id={`${identifier}-tab`}
+        data-bs-toggle="tab"
+        data-bs-target={`#${identifier}-tab-pane`}
+        type="button"
+        role="tab"
+        aria-controls={`${identifier}-tab-pane`}
+        aria-selected={ariaSelected}
+      >
+        {text}
+      </button>
+    </li>
+  );
+};
+
+interface TabPanelProps {
+  identifier: string;
+  extraClass?: string;
+  children?: React.ReactNode | undefined;
+}
+
+const TabPanel = ({ identifier, extraClass = "", children }: TabPanelProps) => {
+  return (
+    <div
+      className={"tab-pane fade ".concat(extraClass)}
+      id={`${identifier}-tab-pane`}
+      role="tabpanel"
+      aria-labelledby={`${identifier}-tab`}
+      tabIndex={0}
+    >
+      {children}
+    </div>
+  );
+};
 
 export default YourNotes;
