@@ -1,14 +1,15 @@
 import {
-  createContext,
-  PropsWithChildren,
-  useRef,
   useState,
   useEffect,
+  PropsWithChildren,
+  useRef,
+  createContext,
 } from "react";
 
 import { fetchChapters, fetchQuran, fetchRoots } from "@/util/fetchData";
 import quranClass from "@/util/quranService";
-import LoadingSpinner from "@/components/LoadingSpinner";
+
+import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 export const QuranContext = createContext<quranClass | null>(null);
 

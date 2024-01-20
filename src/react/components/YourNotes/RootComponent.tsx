@@ -22,7 +22,7 @@ const RootComponent = ({ rootID }: RootComponentProps) => {
 
   const rootNote = useAppSelector(selecRootNote(rootID));
 
-  const { text, dir } = rootNote;
+  const { text, dir = "" } = rootNote;
 
   const [stateEditable, setStateEditable] = useState(text ? false : true);
 
@@ -36,12 +36,12 @@ const RootComponent = ({ rootID }: RootComponentProps) => {
   const handleInputSubmit = useCallback(
     (key: string, value: string) => {
       dbFuncs
-        .saveRootNote(key, value, dir || "")
+        .saveRootNote(key, value, dir)
         .then(function () {
-          toast.success(t("save_success") as string);
+          toast.success(t("save_success"));
         })
         .catch(function () {
-          toast.success(t("save_failed") as string);
+          toast.error(t("save_failed"));
         });
 
       setStateEditable(false);
@@ -74,7 +74,7 @@ const RootComponent = ({ rootID }: RootComponentProps) => {
         <FormComponent
           inputValue={text}
           inputKey={rootID}
-          inputDirection={dir || ""}
+          inputDirection={dir}
           handleInputChange={handleNoteChange}
           handleInputSubmit={handleInputSubmit}
           handleSetDirection={handleSetDirection}
@@ -85,7 +85,7 @@ const RootComponent = ({ rootID }: RootComponentProps) => {
         <TextComponent
           inputKey={rootID}
           inputValue={text}
-          inputDirection={dir || ""}
+          inputDirection={dir}
           handleEditButtonClick={handleEditClick}
           textClassname="card-body yournotes-note-text"
           editClassname="card-footer"

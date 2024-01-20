@@ -22,7 +22,7 @@ import { rootNotesActions } from "@/store/slices/rootNotes";
 import { ExpandButton } from "@/components/Generic/Buttons";
 import { TextForm } from "@/components/TextForm";
 import NoteText from "@/components/NoteText";
-import LoadingSpinner from "@/components/LoadingSpinner";
+import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 interface RootsListProps {
   searchInclusive: boolean;
@@ -98,20 +98,20 @@ const RootComponent = memo(
     const { t } = useTranslation();
     const dispatch = useAppDispatch();
 
-    const noteText = currentNote ? currentNote.text : "";
-    const inputDirection = currentNote ? currentNote.dir : "";
+    const noteText = currentNote?.text || "";
+    const inputDirection = currentNote?.dir || "";
 
     const [stateEditable, setStateEditable] = useState(noteText ? false : true);
 
     const handleNoteSubmit = useCallback(
       (key: string, value: string) => {
         dbFuncs
-          .saveRootNote(key, value, inputDirection || "")
+          .saveRootNote(key, value, inputDirection)
           .then(function () {
-            toast.success(t("save_success") as string);
+            toast.success(t("save_success"));
           })
           .catch(function () {
-            toast.success(t("save_failed") as string);
+            toast.error(t("save_failed"));
           });
 
         setStateEditable(false);
@@ -160,7 +160,7 @@ const RootComponent = memo(
           inputKey={root_id}
           inputValue={noteText}
           isEditable={stateEditable}
-          inputDirection={inputDirection || ""}
+          inputDirection={inputDirection}
           handleSetDirection={handleSetDirection}
           handleInputChange={handleNoteChange}
           handleInputSubmit={handleNoteSubmit}
