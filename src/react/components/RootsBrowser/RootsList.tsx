@@ -20,8 +20,8 @@ import { selecRootNote, useAppDispatch, useAppSelector } from "@/store";
 import { rootNotesActions } from "@/store/slices/rootNotes";
 
 import { ExpandButton } from "@/components/Generic/Buttons";
-import { TextForm } from "@/components/TextForm";
-import NoteText from "@/components/NoteText";
+import { TextForm } from "@/components/Generic/TextForm";
+import NoteText from "@/components/Custom/NoteText";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 interface RootsListProps {

@@ -1,16 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-
+import { Provider } from "react-redux";
 import { HashRouter } from "react-router-dom";
 
-import store from "./store";
-import { Provider } from "react-redux";
+import "./i18n";
 
-import Layout from "./components/Layout/Layout";
+import store from "@/store";
 import App from "./App";
 
-import "./i18n";
-import DataLoader from "./components/DataLoader";
+import Layout from "@/components/Layout/Layout";
+import DataLoader from "@/components/Custom/DataLoader";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
