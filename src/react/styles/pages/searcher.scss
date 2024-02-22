@@ -2,9 +2,28 @@
   background-color: var(--color-primary);
   display: flex;
   overflow: hidden;
-  max-height: 100%;
-  height: 100%;
-  gap: 10px;
+  flex: 1; /* This will take up the remaining height */
+  flex-direction: column;
+
+  .tab-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .tab-pane {
+    flex: 1;
+    overflow: hidden;
+  }
+
+  &-search {
+    display: flex;
+    overflow: hidden;
+    max-height: 100%;
+    height: 100%;
+    gap: 10px;
+  }
 
   &-side {
     padding: 1rem;
@@ -40,7 +59,9 @@
     margin: 5px;
     padding: 5px;
     background-color: #f7fafc;
-    overflow-y: scroll;
+    overflow-y: hidden;
+    display: flex;
+    flex-direction: column;
 
     &-roots {
       display: flex;
@@ -75,10 +96,52 @@
     }
 
     &-verses {
+      display: flex;
+      overflow-y: scroll;
+      max-height: 100%;
+      height: 100%;
+      flex-direction: column;
+
       &-item {
         padding-top: 5px;
         padding-bottom: 5px;
         border-bottom: 1px solid #dee2e6;
+        font-size: larger;
+
+        &-suffix {
+          cursor: pointer;
+          &:hover {
+            color: cornflowerblue;
+          }
+        }
+      }
+    }
+  }
+
+  &-chapter {
+    background-color: #f7fafc;
+    padding: 1rem;
+    overflow-y: scroll;
+    display: flex;
+    max-height: 100%;
+    height: 100%;
+    flex-direction: column;
+
+    &-verse {
+      padding-top: 5px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid #dee2e6;
+      font-size: larger;
+
+      &-highlight {
+        background-color: antiquewhite;
+      }
+
+      &-suffix {
+        cursor: pointer;
+        &:hover {
+          color: cornflowerblue;
+        }
       }
     }
   }
