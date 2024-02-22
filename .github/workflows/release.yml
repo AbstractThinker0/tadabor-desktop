@@ -17,12 +17,13 @@ jobs:
         os: [macos-latest, ubuntu-latest, windows-latest]
 
     steps:
+      - run: python3 -m pip install setuptools
       - uses: actions/checkout@master
       - uses: actions/setup-node@master
         with:
           node-version: 20
       - name: install dependencies
-        run: npm install
+        run: npm ci
       - name: publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
