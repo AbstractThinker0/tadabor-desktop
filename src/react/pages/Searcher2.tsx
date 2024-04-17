@@ -1,5 +1,8 @@
-import { Fragment, useEffect, useState, useTransition, useRef } from "react";
+import { useEffect, useState, useTransition, useRef } from "react";
 import { useTranslation } from "react-i18next";
+
+import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
+import { fetchVerseNotes } from "@/store/slices/verseNotes";
 
 import useQuran from "@/context/useQuran";
 import { verseMatchResult } from "@/types";
@@ -16,6 +19,7 @@ import QuranTab from "@/components/Custom/QuranTab";
 import { TabButton, TabPanel } from "@/components/Generic/Tabs";
 import { ExpandButton } from "@/components/Generic/Buttons";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
 
 const Searcher2 = () => {
   const refVerseButton = useRef<HTMLButtonElement>(null);
@@ -23,6 +27,8 @@ const Searcher2 = () => {
   const { t } = useTranslation();
   const [verseTab, setVerseTab] = useState("");
   const [dummyCounter, setDummyCounter] = useState(0);
+  const dispatch = useAppDispatch();
+  const isVNotesLoading = useAppSelector(isVerseNotesLoading());
 
   const handleVerseTab = (verseKey: string) => {
     setVerseTab(verseKey);
@@ -37,6 +43,10 @@ const Searcher2 = () => {
 
     refVerseButton.current.click();
   }, [verseTab, dummyCounter]);
+
+  useEffect(() => {
+    dispatch(fetchVerseNotes());
+  }, []);
 
   return (
     <div className="searcher2">
@@ -64,16 +74,40 @@ const Searcher2 = () => {
           </li>
         )}
       </ul>
-      <div className="tab-content" id="myTabContent">
-        <TabPanel identifier="search" extraClass="show active">
-          <Searcher2Tab handleVerseTab={handleVerseTab} />
-        </TabPanel>
-        {verseTab ? (
-          <QuranTab verseKey={verseTab} dummyProp={dummyCounter} />
-        ) : (
-          ""
-        )}
-      </div>
+      {isVNotesLoading ? (
+        <LoadingSpinner />
+      ) : (
+        <TabContent
+          verseTab={verseTab}
+          dummyCounter={dummyCounter}
+          handleVerseTab={handleVerseTab}
+        />
+      )}
+    </div>
+  );
+};
+
+interface TabContentProps {
+  verseTab: string;
+  dummyCounter: number;
+  handleVerseTab: (verseKey: string) => void;
+}
+
+const TabContent = ({
+  verseTab,
+  dummyCounter,
+  handleVerseTab,
+}: TabContentProps) => {
+  return (
+    <div className="tab-content" id="myTabContent">
+      <TabPanel identifier="search" extraClass="show active">
+        <Searcher2Tab handleVerseTab={handleVerseTab} />
+      </TabPanel>
+      {verseTab ? (
+        <QuranTab verseKey={verseTab} dummyProp={dummyCounter} />
+      ) : (
+        ""
+      )}
     </div>
   );
 };
@@ -225,7 +259,7 @@ const Searcher2Tab = ({ handleVerseTab }: Searcher2TabProps) => {
                 key={verseMatch.key}
               >
                 <div>
-                  <HighlightedText verse={verseMatch} />
+                  <VerseHighlightMatches verse={verseMatch} />
                   <span
                     className="searcher2-searchpanel-display-list-verse-suffix"
                     onClick={() => onClickVerse(verseMatch.key)}
@@ -241,28 +275,6 @@ const Searcher2Tab = ({ handleVerseTab }: Searcher2TabProps) => {
         </div>
       </div>
     </div>
-  );
-};
-
-interface HighlightedTextProps {
-  verse: verseMatchResult;
-}
-
-const HighlightedText = ({ verse }: HighlightedTextProps) => {
-  const verseParts = verse.verseParts;
-
-  return (
-    <>
-      {verseParts.map((part, i) => {
-        const isHighlighted = part.isMatch;
-
-        return (
-          <Fragment key={i}>
-            {isHighlighted ? <mark>{part.text}</mark> : part.text}
-          </Fragment>
-        );
-      })}
-    </>
   );
 };
 
