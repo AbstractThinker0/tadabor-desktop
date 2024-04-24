@@ -1,4 +1,4 @@
-import { app, BrowserWindow, shell } from "electron";
+import { app, BrowserWindow, shell, Menu } from "electron";
 import path from "path";
 import { spawn } from "child_process";
 
@@ -82,6 +82,10 @@ const createWindow = (): void => {
   mainWindow.once("ready-to-show", () => {
     mainWindow.maximize();
     mainWindow.show();
+
+    const menu = Menu.getApplicationMenu();
+    const items = menu.items.filter((item) => item.role !== "help");
+    Menu.setApplicationMenu(Menu.buildFromTemplate(items));
   });
 };
 
