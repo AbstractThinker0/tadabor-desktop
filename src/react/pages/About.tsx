@@ -33,12 +33,9 @@ const AboutEnglish = () => {
           <p>
             The app is in beta, which means you may encounter occasional bugs.
             We strongly recommend keeping a backup of any data you save while
-            using the app. Your data is stored locally on your machine and is
-            never transmitted or stored on a remote database. However, it's
-            always a good practice to have a backup. Please be aware that the
-            accuracy of the Quran roots/stems list has not been verified, and
-            the completeness of search results based on sentences/roots has not
-            been extensively tested.
+            using the app. Please be aware that the accuracy of the Quran roots
+            list has not been verified, and the completeness of search results
+            based on sentences or roots has not been extensively tested.
           </p>
           <h5>Credits:</h5>
           <ul>
@@ -65,7 +62,6 @@ const AboutEnglish = () => {
               Quran roots compilation
             </li>
           </ul>
-
           <h5>Future project:</h5>
           <p>
             Once all features of this project are implemented, it will serve as
@@ -73,8 +69,7 @@ const AboutEnglish = () => {
             for collaborative translation and reflection upon the Quran. The
             ultimate goal is to achieve an accurate understanding of the true
             message of the Quran by undoing all the semantic changes that have
-            occurred over the centuries. There is currently no set deadline, and
-            it all depends on God's will.
+            occurred over the centuries.
           </p>
         </div>
       </div>
@@ -115,12 +110,12 @@ const AboutArabic = () => {
           <p>
             التطبيق في مرحلة تجريبية، مما يعني أنه قد تواجه أحيانًا بعض الأخطاء.
             نوصي بشدة بأن تقوم بعمل نسخ احتياطية لأي بيانات تقوم بحفظها أثناء
-            استخدام التطبيق. تُخزن البيانات على جهازك ولا تُرسل أو تُخزن على
-            قاعدة بيانات خارجيّة. ومع ذلك، فإن وجود نسخة احتياطية دائمًا أمر
-            جيد. يُرجى ملاحظة أن دقة قائمة جذور/أوزان القرآن لم تتم التحقق منها،
-            ولم يتم اختبار كمالية نتائج البحث بناءً على الجمل/الجذور بشكل مكثف.
+            استخدام التطبيق. يُرجى ملاحظة أن دقة قائمة جذور القرآن لم يتم التحقق
+            منها، ولم يتم اختبار كمالية نتائج البحث بناءً على الجمل أو الجذور
+            بشكل مكثف.
           </p>
           <h5>الشكر:</h5>
+
           <ul>
             <li className="fw-bold">
               خالق الكون لنعمه التي إن حاولت أن أحصيها فلن أعدها
@@ -148,8 +143,7 @@ const AboutArabic = () => {
             بمجرد اكتمال هذا المشروع الحالي، سيتم إستخدامه كأساس لمشروع آخر يهدف
             إلى أن يكون منصة تشاركية لترجمة وتدبر القرآن، والهدف تحقيق فهم دقيق
             للرسالة الحقيقية للقرآن عن طريق التراجع عن كل التغييرات الدلالية
-            التي حدثت على مر القرون، لم يتم تحديد موعد نهائي للمشروع، وكل شيء
-            يعتمد على مشيئة الله.
+            التي حدثت على مر القرون.
           </p>
         </div>
       </div>
