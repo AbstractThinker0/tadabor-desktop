@@ -1,6 +1,17 @@
 import { selectedChaptersType, verseProps } from "@/types";
 import { createActionPayload, ActionsUnion } from "@/types/useReducer";
 
+export interface stateProps {
+  currentChapter: number;
+  colorsList: coloredProps;
+  selectedColors: coloredProps;
+  coloredVerses: coloredProps;
+  currentVerse: verseProps | null;
+  currentColor: colorProps | null;
+  selectedChapters: selectedChaptersType;
+  scrollKey: string;
+}
+
 export interface colorProps {
   colorID: string;
   colorCode: string;
@@ -13,7 +24,6 @@ export interface coloredProps {
 
 export enum CL_ACTIONS {
   SET_CHAPTER = "dispatchSetChapter",
-  SET_CHAPTER_TOKEN = "dispatchSetChapterToken",
   SET_COLORS_LIST = "dispatchSetColorsList",
   ADD_COLOR = "dispatchAddColor",
   SELECT_COLOR = "dispatchSelectColor",
@@ -32,9 +42,6 @@ export enum CL_ACTIONS {
 export const clActions = {
   setChapter: createActionPayload<CL_ACTIONS.SET_CHAPTER, number>(
     CL_ACTIONS.SET_CHAPTER
-  ),
-  setChapterToken: createActionPayload<CL_ACTIONS.SET_CHAPTER_TOKEN, string>(
-    CL_ACTIONS.SET_CHAPTER_TOKEN
   ),
   setColorsList: createActionPayload<CL_ACTIONS.SET_COLORS_LIST, coloredProps>(
     CL_ACTIONS.SET_COLORS_LIST

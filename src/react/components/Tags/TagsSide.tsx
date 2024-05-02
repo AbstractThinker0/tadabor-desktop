@@ -1,8 +1,6 @@
-import { Dispatch, useEffect, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { Dispatch } from "react";
 
 import { selectedChaptersType } from "@/types";
-import useQuran from "@/context/useQuran";
 import { dbFuncs } from "@/util/db";
 
 import {
@@ -14,6 +12,7 @@ import {
 } from "./consts";
 import AddTagModal from "./AddTagModal";
 import DeleteTagModal from "./DeleteTagModal";
+import ChaptersList from "./ChaptersList";
 
 interface TagsSideProps {
   currentChapter: number;
@@ -34,78 +33,6 @@ function TagsSide({
   versesTags,
   dispatchTagsAction,
 }: TagsSideProps) {
-  const quranService = useQuran();
-  const { t } = useTranslation();
-  const refChapter = useRef<HTMLDivElement | null>(null);
-  const [chapterToken, setChapterToken] = useState("");
-
-  useEffect(() => {
-    const child = refChapter.current;
-    const parent = refChapter.current?.parentElement?.parentElement;
-
-    if (!child || !parent) return;
-
-    const parentOffsetTop = parent.offsetTop;
-
-    if (
-      parent.scrollTop + parentOffsetTop <
-        child.offsetTop - parent.clientHeight + child.clientHeight * 2.5 ||
-      parent.scrollTop + parentOffsetTop >
-        child.offsetTop - child.clientHeight * 2.5
-    ) {
-      parent.scrollTop =
-        child.offsetTop - parentOffsetTop - parent.clientHeight / 2;
-    }
-  }, [currentChapter]);
-
-  function onClickChapter(
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    chapterID: number
-  ) {
-    document.documentElement.scrollTop = 0;
-
-    dispatchTagsAction(tagsActions.setChapter(chapterID));
-    setChapterToken("");
-
-    refChapter.current = event.currentTarget;
-  }
-
-  function onChangeSelectChapter(chapterID: number) {
-    dispatchTagsAction(tagsActions.toggleSelectChapter(chapterID));
-  }
-
-  const currentSelectedChapters = Object.keys(selectedChapters).filter(
-    (chapterID) => selectedChapters[chapterID] === true
-  );
-
-  const getSelectedCount = currentSelectedChapters.length;
-
-  const onlyCurrentSelected =
-    getSelectedCount === 1 &&
-    Number(currentSelectedChapters[0]) === currentChapter;
-
-  function onClickSelectAll() {
-    const selectedChapters: selectedChaptersType = {};
-
-    quranService.chapterNames.forEach((chapter) => {
-      selectedChapters[chapter.id] = true;
-    });
-
-    dispatchTagsAction(tagsActions.setSelectedChapters(selectedChapters));
-  }
-
-  function onClickDeselectAll() {
-    const selectedChapters: selectedChaptersType = {};
-
-    quranService.chapterNames.forEach((chapter) => {
-      selectedChapters[chapter.id] = false;
-    });
-
-    selectedChapters[currentChapter] = true;
-
-    dispatchTagsAction(tagsActions.setSelectedChapters(selectedChapters));
-  }
-
   function onClickSelectTag(tag: tagProps) {
     dispatchTagsAction(tagsActions.selectTag(tag));
   }
@@ -138,106 +65,19 @@ function TagsSide({
 
   const isTagSelected = (tagID: string) => (selectedTags[tagID] ? true : false);
 
-  const onChangeChapterToken = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //
-    setChapterToken(e.target.value);
-  };
-
   return (
     <div className="tags-side">
-      <div className="tags-side-chapters">
-        <input
-          className="tags-side-chapters-search"
-          type="text"
-          placeholder={quranService.getChapterName(currentChapter)}
-          value={chapterToken}
-          onChange={onChangeChapterToken}
-        />
-        <div className="tags-side-chapters-list">
-          {quranService.chapterNames
-            .filter((chapter) => chapter.name.includes(chapterToken))
-            .map((chapter) => (
-              <div
-                key={chapter.id}
-                className={`tags-side-chapters-list-item ${
-                  currentChapter === chapter.id
-                    ? "tags-side-chapters-list-item-selected"
-                    : ""
-                }`}
-              >
-                <div
-                  className={"tags-side-chapters-list-item-name"}
-                  onClick={(event) => onClickChapter(event, chapter.id)}
-                >
-                  {chapter.id}. {chapter.name}
-                </div>
-                <input
-                  type="checkbox"
-                  checked={
-                    selectedChapters[chapter.id] !== undefined
-                      ? selectedChapters[chapter.id]
-                      : true
-                  }
-                  onChange={() => onChangeSelectChapter(chapter.id)}
-                />
-              </div>
-            ))}
-        </div>
-      </div>
-      <div className="tags-side-chapters-buttons" dir="ltr">
-        <button
-          disabled={getSelectedCount === 114}
-          onClick={onClickSelectAll}
-          className="btn btn-dark btn-sm"
-        >
-          {t("all_chapters")}
-        </button>
-        <button
-          disabled={onlyCurrentSelected}
-          onClick={onClickDeselectAll}
-          className="btn btn-dark btn-sm"
-        >
-          {t("current_chapter")}
-        </button>
-      </div>
-      <div className="tags-side-list" dir="ltr">
-        <div className="fw-bold pb-1">Tags list:</div>
-        {Object.keys(tags).length > 0 && (
-          <div className="tags-side-list-items">
-            {Object.keys(tags).map((tagID) => (
-              <div
-                className={`tags-side-list-items-item ${
-                  isTagSelected(tagID)
-                    ? "tags-side-list-items-item-selected"
-                    : ""
-                }`}
-                key={tagID}
-              >
-                <div
-                  className="tags-side-list-items-item-text"
-                  onClick={() => onClickSelectTag(tags[tagID])}
-                >
-                  {tags[tagID].tagDisplay}
-                </div>
-                <div
-                  data-bs-toggle="modal"
-                  data-bs-target="#deleteTagModal"
-                  onClick={() => onClickDeleteTag(tags[tagID])}
-                >
-                  🗑️
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-        <button
-          data-bs-toggle="modal"
-          data-bs-target="#addTagModal"
-          className="btn btn-dark tags-side-list-btn"
-        >
-          Add tag
-        </button>
-      </div>
+      <ChaptersList
+        currentChapter={currentChapter}
+        selectedChapters={selectedChapters}
+        dispatchTagsAction={dispatchTagsAction}
+      />
+      <SideList
+        tags={tags}
+        isTagSelected={isTagSelected}
+        onClickSelectTag={onClickSelectTag}
+        onClickDeleteTag={onClickDeleteTag}
+      />
       <AddTagModal addTag={addTag} />
       <DeleteTagModal
         deleteTag={deleteTag}
@@ -247,5 +87,58 @@ function TagsSide({
     </div>
   );
 }
+
+interface SideListProps {
+  tags: tagsProps;
+  isTagSelected: (tagID: string) => boolean;
+  onClickSelectTag(tag: tagProps): void;
+  onClickDeleteTag(tag: tagProps): void;
+}
+
+const SideList = ({
+  tags,
+  isTagSelected,
+  onClickSelectTag,
+  onClickDeleteTag,
+}: SideListProps) => {
+  return (
+    <div className="tags-side-list" dir="ltr">
+      <div className="fw-bold pb-1">Tags list:</div>
+      {Object.keys(tags).length > 0 && (
+        <div className="tags-side-list-items">
+          {Object.keys(tags).map((tagID) => (
+            <div
+              className={`tags-side-list-items-item ${
+                isTagSelected(tagID) ? "tags-side-list-items-item-selected" : ""
+              }`}
+              key={tagID}
+            >
+              <div
+                className="tags-side-list-items-item-text"
+                onClick={() => onClickSelectTag(tags[tagID])}
+              >
+                {tags[tagID].tagDisplay}
+              </div>
+              <div
+                data-bs-toggle="modal"
+                data-bs-target="#deleteTagModal"
+                onClick={() => onClickDeleteTag(tags[tagID])}
+              >
+                🗑️
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+      <button
+        data-bs-toggle="modal"
+        data-bs-target="#addTagModal"
+        className="btn btn-dark tags-side-list-btn"
+      >
+        Add tag
+      </button>
+    </div>
+  );
+};
 
 export default TagsSide;
