@@ -1,12 +1,16 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
-import verseNotesReducer from "./slices/verseNotes";
-import transNotesReducer from "./slices/transNotes";
-import translationsReducer from "./slices/translations";
-import rootNotesReducer from "./slices/rootNotes";
-import searcherPageReducer from "./slices/searcherPage";
-import settingsReducer from "./slices/settings";
+import verseNotesReducer from "@/store/slices/global/verseNotes";
+import transNotesReducer from "@/store/slices/global/transNotes";
+import translationsReducer from "@/store/slices/global/translations";
+import rootNotesReducer from "@/store/slices/global/rootNotes";
+
+import settingsReducer from "@/store/slices/global/settings";
+
+import searcherPageReducer from "@/store/slices/pages/searcher";
+import coloringPageReducer from "@/store/slices/pages/coloring";
+import tagsPageReducer from "@/store/slices/pages/tags";
 
 const store = configureStore({
   reducer: {
@@ -14,8 +18,12 @@ const store = configureStore({
     transNotes: transNotesReducer,
     translations: translationsReducer,
     rootNotes: rootNotesReducer,
-    searcherPage: searcherPageReducer,
+
     settings: settingsReducer,
+
+    searcherPage: searcherPageReducer,
+    coloringPage: coloringPageReducer,
+    tagsPage: tagsPageReducer,
   },
 });
 

@@ -1,15 +1,10 @@
-import {
-  useCallback,
-  useEffect,
-  memo,
-  useRef,
-  useTransition,
-  useState,
-} from "react";
+import { useEffect, memo, useRef, useTransition, useState } from "react";
 
 import useQuran from "@/context/useQuran";
-import { selectedChaptersType, verseProps } from "@/types";
-import { dbFuncs } from "@/util/db";
+import { verseProps } from "@/types";
+
+import { useAppDispatch, useAppSelector } from "@/store";
+import { coloringPageActions } from "@/store/slices/pages/coloring";
 
 import { ExpandButton } from "@/components/Generic/Buttons";
 import NoteText from "@/components/Custom/NoteText";
@@ -17,252 +12,123 @@ import VerseContainer from "@/components/Custom/VerseContainer";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import VerseModal from "./VerseModal";
-import { clActions, clActionsProps, colorProps, coloredProps } from "./consts";
+import { colorProps, coloredProps } from "./consts";
 import { getTextColor } from "./util";
 
-interface VersesSideProps {
-  selectedColors: coloredProps;
-  coloredVerses: coloredProps;
-  currentChapter: number;
-  colorsList: coloredProps;
-  currentVerse: verseProps | null;
-  selectedChapters: selectedChaptersType;
-  scrollKey: string;
-  dispatchClAction: (value: clActionsProps) => void;
-}
-
-function VersesSide({
-  selectedColors,
-  coloredVerses,
-  currentChapter,
-  colorsList,
-  currentVerse,
-  scrollKey,
-  dispatchClAction,
-  selectedChapters,
-}: VersesSideProps) {
-  const quranService = useQuran();
-
-  const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
-
-  const [isPending, startTransition] = useTransition();
-
-  function onClickDeleteSelected(colorID: string) {
-    dispatchClAction(clActions.deselectColor(colorID));
-  }
-
-  const onClickVerseColor = useCallback(
-    (verse: verseProps) => {
-      dispatchClAction(clActions.setCurrentVerse(verse));
-    },
-    [dispatchClAction]
-  );
-
-  function setCurrentVerse(verse: verseProps | null) {
-    dispatchClAction(clActions.setCurrentVerse(verse));
-  }
-
-  function setVerseColor(verseKey: string, color: colorProps | null) {
-    if (color === null) {
-      dbFuncs.deleteVerseColor(verseKey);
-    } else {
-      dbFuncs.saveVerseColor({
-        verse_key: verseKey,
-        color_id: color.colorID,
-      });
-    }
-
-    dispatchClAction(
-      clActions.setVerseColor({
-        verseKey: verseKey,
-        color: color,
-      })
-    );
-  }
-
-  const asArray = Object.entries(coloredVerses);
-
-  const filtered = asArray.filter(([key]) => {
-    const info = key.split("-");
-    return selectedChapters[info[0]] === true;
-  });
-
-  const selectedColoredVerses = Object.fromEntries(filtered);
-
-  const chaptersScope = Object.keys(selectedChapters).filter(
-    (chapterID) => selectedChapters[chapterID] === true
-  );
-
-  const refListVerse = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!scrollKey || !refListVerse.current) return;
-
-    const verseToHighlight = refListVerse.current.querySelector(
-      `[data-id="${scrollKey}"]`
-    );
-
-    if (verseToHighlight) {
-      setTimeout(() => {
-        verseToHighlight.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
-      });
-    }
-  }, [scrollKey, isPending]);
-
-  useEffect(() => {
-    //
-    startTransition(() => {
-      setStateVerses(quranService.getVerses(currentChapter));
-    });
-  }, [currentChapter]);
+const VersesSide = () => {
+  const coloringState = useAppSelector((state) => state.coloringPage);
 
   return (
     <div className="verses-side">
       <div className="card verse-list" dir="rtl">
-        {Object.keys(selectedColors).length ? (
-          <>
-            <div className="verses-side-colors" dir="ltr">
-              <div className="verses-side-colors-selected">
-                <div className="fw-bold">Selected colors:</div>
-                {Object.keys(selectedColors).map((colorID) => (
-                  <div
-                    key={colorID}
-                    className="verses-side-colors-item text-center rounded"
-                    style={
-                      selectedColors[colorID]
-                        ? {
-                            backgroundColor: selectedColors[colorID].colorCode,
-                            color: getTextColor(
-                              selectedColors[colorID].colorCode
-                            ),
-                          }
-                        : {}
-                    }
-                  >
-                    <div></div>
-                    <div className="verses-side-colors-item-text">
-                      {selectedColors[colorID].colorDisplay}
-                    </div>
-                    <div
-                      className="verses-side-colors-item-close"
-                      onClick={() => onClickDeleteSelected(colorID)}
-                    >
-                      X
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="verses-side-colors-chapters">
-                <div className="fw-bold">Selected chapters:</div>
-                {chaptersScope.length === 114 ? (
-                  <div className="fw-bold">All chapters.</div>
-                ) : chaptersScope.length === 0 ? (
-                  <div className="fw-bold">No chapters selected.</div>
-                ) : (
-                  chaptersScope.map((chapterID) => (
-                    <div
-                      key={chapterID}
-                      className="verses-side-colors-chapters-item"
-                    >
-                      {quranService.getChapterName(chapterID)}
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
-            {chaptersScope.length ? (
-              <SelectedVerses
-                selectedColors={selectedColors}
-                coloredVerses={selectedColoredVerses}
-                dispatchClAction={dispatchClAction}
-              />
-            ) : (
-              <div className="text-center" dir="ltr">
-                You have to select at least one chapter.
-              </div>
-            )}
-          </>
-        ) : isPending ? (
-          <LoadingSpinner />
+        {Object.keys(coloringState.selectedColors).length ? (
+          <SelectedContainter />
         ) : (
-          <VersesList
-            currentChapter={currentChapter}
-            stateVerses={stateVerses}
-            coloredVerses={coloredVerses}
-            onClickVerseColor={onClickVerseColor}
-          />
+          <VersesList />
         )}
-        <VerseModal
-          colorsList={colorsList}
-          currentVerse={currentVerse}
-          setVerseColor={setVerseColor}
-          setCurrentVerse={setCurrentVerse}
-          verseColor={
-            currentVerse
-              ? coloredVerses[currentVerse.key]
-                ? coloredVerses[currentVerse.key]
-                : null
-              : null
-          }
-        />
       </div>
+      <VerseModal />
     </div>
   );
-}
+};
 
-interface VerseComponentProps {
-  color: colorProps | null;
-  verse: verseProps;
-  onClickVerseColor: (verse: verseProps) => void;
-}
+const SelectedContainter = () => {
+  const coloringState = useAppSelector((state) => state.coloringPage);
+  const dispatch = useAppDispatch();
+  const quranService = useQuran();
 
-const VerseComponent = memo(
-  ({ verse, onClickVerseColor, color }: VerseComponentProps) => {
-    return (
-      <>
-        <VerseContainer>
-          {verse.versetext} ({verse.verseid}){" "}
-        </VerseContainer>
-        <ExpandButton
-          identifier={verse.key}
-          style={
-            color
-              ? {
-                  backgroundColor: color.colorCode,
-                  color: getTextColor(color.colorCode),
-                }
-              : {}
-          }
-        />
-        <button
-          className="verse-btn"
-          data-bs-toggle="modal"
-          data-bs-target="#verseModal"
-          onClick={() => onClickVerseColor(verse)}
-        >
-          🎨
-        </button>
-      </>
-    );
+  function onClickDeleteSelected(colorID: string) {
+    dispatch(coloringPageActions.deselectColor(colorID));
   }
-);
+
+  const chaptersScope = Object.keys(coloringState.selectedChapters).filter(
+    (chapterID) => coloringState.selectedChapters[chapterID] === true
+  );
+
+  const getSelectedColoredVerses = () => {
+    const asArray = Object.entries(coloringState.coloredVerses);
+
+    const filtered = asArray.filter(([key]) => {
+      const info = key.split("-");
+      return coloringState.selectedChapters[info[0]] === true;
+    });
+
+    return Object.fromEntries(filtered);
+  };
+
+  return (
+    <>
+      <div className="verses-side-colors" dir="ltr">
+        <div className="verses-side-colors-selected">
+          <div className="fw-bold">Selected colors:</div>
+          {Object.keys(coloringState.selectedColors).map((colorID) => (
+            <div
+              key={colorID}
+              className="verses-side-colors-item text-center rounded"
+              style={
+                coloringState.selectedColors[colorID]
+                  ? {
+                      backgroundColor:
+                        coloringState.selectedColors[colorID].colorCode,
+                      color: getTextColor(
+                        coloringState.selectedColors[colorID].colorCode
+                      ),
+                    }
+                  : {}
+              }
+            >
+              <div></div>
+              <div className="verses-side-colors-item-text">
+                {coloringState.selectedColors[colorID].colorDisplay}
+              </div>
+              <div
+                className="verses-side-colors-item-close"
+                onClick={() => onClickDeleteSelected(colorID)}
+              >
+                X
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="verses-side-colors-chapters">
+          <div className="fw-bold">Selected chapters:</div>
+          {chaptersScope.length === 114 ? (
+            <div className="fw-bold">All chapters.</div>
+          ) : chaptersScope.length === 0 ? (
+            <div className="fw-bold">No chapters selected.</div>
+          ) : (
+            chaptersScope.map((chapterID) => (
+              <div key={chapterID} className="verses-side-colors-chapters-item">
+                {quranService.getChapterName(chapterID)}
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+      {chaptersScope.length ? (
+        <SelectedVerses
+          selectedColors={coloringState.selectedColors}
+          coloredVerses={getSelectedColoredVerses()}
+        />
+      ) : (
+        <div className="text-center" dir="ltr">
+          You have to select at least one chapter.
+        </div>
+      )}
+    </>
+  );
+};
 
 interface SelectedVersesProps {
   coloredVerses: coloredProps;
   selectedColors: coloredProps;
-
-  dispatchClAction: (value: clActionsProps) => void;
 }
 
 function SelectedVerses({
   coloredVerses,
   selectedColors,
-
-  dispatchClAction,
 }: SelectedVersesProps) {
+  const dispatch = useAppDispatch();
   const quranService = useQuran();
 
   const selectedVerses = Object.keys(coloredVerses).filter((verseKey) =>
@@ -270,9 +136,13 @@ function SelectedVerses({
   );
 
   function onClickChapter(verse: verseProps) {
-    dispatchClAction(clActions.gotoChapter(Number(verse.suraid)));
-    dispatchClAction(clActions.setScrollKey(verse.key));
+    dispatch(coloringPageActions.gotoChapter(Number(verse.suraid)));
+    dispatch(coloringPageActions.setScrollKey(verse.key));
   }
+
+  const onClickVerseColor = (verse: verseProps) => {
+    dispatch(coloringPageActions.setCurrentVerse(verse));
+  };
 
   return (
     <div>
@@ -317,6 +187,14 @@ function SelectedVerses({
                       color: getTextColor(coloredVerses[verseKey].colorCode),
                     }}
                   />
+                  <button
+                    className="verse-btn"
+                    data-bs-toggle="modal"
+                    data-bs-target="#verseModal"
+                    onClick={() => onClickVerseColor(verse)}
+                  >
+                    🎨
+                  </button>
                 </>
                 <NoteText verseKey={verse.key} className="verse-item-note" />
               </div>
@@ -331,26 +209,50 @@ function SelectedVerses({
   );
 }
 
-interface VersesListProps {
-  currentChapter: number;
-  refListVerse?: React.RefObject<HTMLDivElement>;
-  stateVerses: verseProps[];
-  coloredVerses: coloredProps;
-  onClickVerseColor: (verse: verseProps) => void;
-}
+const VersesList = () => {
+  const coloringState = useAppSelector((state) => state.coloringPage);
+  const dispatch = useAppDispatch();
 
-const VersesList = ({
-  currentChapter,
-  refListVerse,
-  stateVerses,
-  coloredVerses,
-  onClickVerseColor,
-}: VersesListProps) => {
   const quranService = useQuran();
+
+  const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
+
+  const [isPending, startTransition] = useTransition();
+
+  const refListVerse = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!coloringState.scrollKey || !refListVerse.current) return;
+
+    const verseToHighlight = refListVerse.current.querySelector(
+      `[data-id="${coloringState.scrollKey}"]`
+    );
+
+    setTimeout(() => {
+      if (verseToHighlight) {
+        verseToHighlight.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+
+        dispatch(coloringPageActions.setScrollKey(""));
+      }
+    });
+  }, [coloringState.scrollKey, isPending]);
+
+  useEffect(() => {
+    //
+    startTransition(() => {
+      setStateVerses(quranService.getVerses(coloringState.currentChapter));
+    });
+  }, [coloringState.currentChapter]);
+
+  if (isPending) return <LoadingSpinner />;
+
   return (
     <>
       <div className="card-title">
-        سورة {quranService.getChapterName(currentChapter)}
+        سورة {quranService.getChapterName(coloringState.currentChapter)}
       </div>
       <div ref={refListVerse}>
         {stateVerses.map((verse) => (
@@ -359,18 +261,24 @@ const VersesList = ({
             key={verse.key}
             data-id={verse.key}
             style={
-              coloredVerses[verse.key]
+              coloringState.coloredVerses[verse.key]
                 ? {
-                    backgroundColor: coloredVerses[verse.key].colorCode,
-                    color: getTextColor(coloredVerses[verse.key].colorCode),
+                    backgroundColor:
+                      coloringState.coloredVerses[verse.key].colorCode,
+                    color: getTextColor(
+                      coloringState.coloredVerses[verse.key].colorCode
+                    ),
                   }
                 : {}
             }
           >
             <VerseComponent
-              color={coloredVerses[verse.key] ? coloredVerses[verse.key] : null}
+              color={
+                coloringState.coloredVerses[verse.key]
+                  ? coloringState.coloredVerses[verse.key]
+                  : null
+              }
               verse={verse}
-              onClickVerseColor={onClickVerseColor}
             />
             <NoteText verseKey={verse.key} className="verse-item-note" />
           </div>
@@ -379,5 +287,45 @@ const VersesList = ({
     </>
   );
 };
+
+interface VerseComponentProps {
+  color: colorProps | null;
+  verse: verseProps;
+}
+
+const VerseComponent = memo(({ verse, color }: VerseComponentProps) => {
+  const dispatch = useAppDispatch();
+
+  const onClickVerseColor = (verse: verseProps) => {
+    dispatch(coloringPageActions.setCurrentVerse(verse));
+  };
+
+  return (
+    <>
+      <VerseContainer>
+        {verse.versetext} ({verse.verseid}){" "}
+      </VerseContainer>
+      <ExpandButton
+        identifier={verse.key}
+        style={
+          color
+            ? {
+                backgroundColor: color.colorCode,
+                color: getTextColor(color.colorCode),
+              }
+            : {}
+        }
+      />
+      <button
+        className="verse-btn"
+        data-bs-toggle="modal"
+        data-bs-target="#verseModal"
+        onClick={() => onClickVerseColor(verse)}
+      >
+        🎨
+      </button>
+    </>
+  );
+});
 
 export default VersesSide;

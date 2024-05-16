@@ -1,13 +1,9 @@
-import {
-  Dispatch,
-  memo,
-  useEffect,
-  useRef,
-  useState,
-  useTransition,
-} from "react";
+import { memo, useEffect, useRef, useState, useTransition } from "react";
 
-import { selectedChaptersType, verseProps } from "@/types";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { tagsPageActions } from "@/store/slices/pages/tags";
+
+import { verseProps } from "@/types";
 import useQuran from "@/context/useQuran";
 import { dbFuncs } from "@/util/db";
 
@@ -16,56 +12,43 @@ import NoteText from "@/components/Custom/NoteText";
 import VerseContainer from "@/components/Custom/VerseContainer";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
-import {
-  tagsActions,
-  tagsActionsProps,
-  tagsProps,
-  versesTagsProps,
-} from "./consts";
+import { tagsProps, versesTagsProps } from "./consts";
 import VerseTagsModal from "./VerseTagsModal";
 
-interface TagsDisplayProps {
-  selectedTags: tagsProps;
-  selectedChapters: selectedChaptersType;
-  tags: tagsProps;
-  versesTags: versesTagsProps;
-  currentChapter: number;
-  currentVerse: verseProps | null;
-  scrollKey: string;
-  dispatchTagsAction: Dispatch<tagsActionsProps>;
-}
-
-function TagsDisplay({
-  selectedTags,
-  selectedChapters,
-  tags,
-  versesTags,
-  currentChapter,
-  currentVerse,
-  scrollKey,
-  dispatchTagsAction,
-}: TagsDisplayProps) {
+function TagsDisplay() {
   const quranService = useQuran();
+  const dispatch = useAppDispatch();
+  const {
+    selectedTags,
+    selectedChapters,
+    tags,
+    versesTags,
+    currentChapter,
+    currentVerse,
+    scrollKey,
+  } = useAppSelector((state) => state.tagsPage);
 
   function onClickDeleteSelected(tagID: string) {
-    dispatchTagsAction(tagsActions.deselectTag(tagID));
+    dispatch(tagsPageActions.deselectTag(tagID));
   }
 
   const chaptersScope = Object.keys(selectedChapters).filter(
     (chapterID) => selectedChapters[chapterID] === true
   );
 
-  const asArray = Object.entries(versesTags);
+  const getSelectedVerses = () => {
+    const asArray = Object.entries(versesTags);
 
-  const filtered = asArray.filter(([key]) => {
-    const info = key.split("-");
-    return selectedChapters[info[0]] === true;
-  });
+    const filtered = asArray.filter(([key]) => {
+      const info = key.split("-");
+      return selectedChapters[info[0]] === true;
+    });
 
-  const selectedVerses = Object.fromEntries(filtered);
+    return Object.fromEntries(filtered);
+  };
 
   function setCurrentVerse(verse: verseProps | null) {
-    dispatchTagsAction(tagsActions.setCurrentVerse(verse));
+    dispatch(tagsPageActions.setCurrentVerse(verse));
   }
 
   function setVerseTags(verseKey: string, tags: string[] | null) {
@@ -75,7 +58,7 @@ function TagsDisplay({
       dbFuncs.saveVerseTags({ verse_key: verseKey, tags_ids: tags });
     }
 
-    dispatchTagsAction(tagsActions.setVerseTags({ verseKey, tags }));
+    dispatch(tagsPageActions.setVerseTags({ verseKey, tags }));
   }
 
   return (
@@ -119,8 +102,7 @@ function TagsDisplay({
               <SelectedVerses
                 selectedTags={selectedTags}
                 tags={tags}
-                versesTags={selectedVerses}
-                dispatchTagsAction={dispatchTagsAction}
+                versesTags={getSelectedVerses()}
               />
             ) : (
               <div className="text-center" dir="ltr">
@@ -134,7 +116,6 @@ function TagsDisplay({
             versesTags={versesTags}
             tags={tags}
             scrollKey={scrollKey}
-            dispatchTagsAction={dispatchTagsAction}
           />
         )}
       </div>
@@ -159,14 +140,12 @@ interface SelectedVersesProps {
   selectedTags: tagsProps;
   tags: tagsProps;
   versesTags: versesTagsProps;
-  dispatchTagsAction: Dispatch<tagsActionsProps>;
 }
 
 function SelectedVerses({
   selectedTags,
   versesTags,
   tags,
-  dispatchTagsAction,
 }: SelectedVersesProps) {
   const quranService = useQuran();
 
@@ -184,11 +163,6 @@ function SelectedVerses({
     else return Number(infoA[1]) - Number(infoB[1]);
   });
 
-  function handleClickVerse(verse: verseProps) {
-    dispatchTagsAction(tagsActions.gotoChapter(verse.suraid));
-    dispatchTagsAction(tagsActions.setScrollKey(verse.key));
-  }
-
   return (
     <div className="card-body">
       {sortedVerses.length ? (
@@ -198,10 +172,7 @@ function SelectedVerses({
             return (
               <div key={verseKey} className="tags-display-chapter-verses-item">
                 <VerseTags tags={tags} versesTags={versesTags[verse.key]} />
-                <SelectedVerseComponent
-                  verse={verse}
-                  handleClickVerse={handleClickVerse}
-                />
+                <SelectedVerseComponent verse={verse} />
                 <NoteText verseKey={verse.key} />
               </div>
             );
@@ -218,17 +189,19 @@ function SelectedVerses({
 
 interface SelectedVerseComponentProps {
   verse: verseProps;
-  handleClickVerse: (verse: verseProps) => void;
 }
 
-const SelectedVerseComponent = ({
-  verse,
-  handleClickVerse,
-}: SelectedVerseComponentProps) => {
+const SelectedVerseComponent = ({ verse }: SelectedVerseComponentProps) => {
+  const dispatch = useAppDispatch();
   const quranService = useQuran();
 
   function onClickVerse(verse: verseProps) {
-    handleClickVerse(verse);
+    dispatch(tagsPageActions.gotoChapter(verse.suraid));
+    dispatch(tagsPageActions.setScrollKey(verse.key));
+  }
+
+  function onClickTagVerse(verse: verseProps) {
+    dispatch(tagsPageActions.setCurrentVerse(verse));
   }
 
   return (
@@ -243,6 +216,14 @@ const SelectedVerseComponent = ({
         </span>
       </VerseContainer>
       <ExpandButton identifier={verse.key} />
+      <button
+        className="btn"
+        data-bs-toggle="modal"
+        data-bs-target="#verseTagsModal"
+        onClick={() => onClickTagVerse(verse)}
+      >
+        🏷️
+      </button>
     </>
   );
 };
@@ -252,20 +233,15 @@ interface ListVersesProps {
   versesTags: versesTagsProps;
   tags: tagsProps;
   scrollKey: string;
-  dispatchTagsAction: Dispatch<tagsActionsProps>;
 }
 
 const ListVerses = memo(
-  ({
-    currentChapter,
-    versesTags,
-    tags,
-    scrollKey,
-    dispatchTagsAction,
-  }: ListVersesProps) => {
+  ({ currentChapter, versesTags, tags, scrollKey }: ListVersesProps) => {
+    const dispatch = useAppDispatch();
     const quranService = useQuran();
 
     const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
+    const [highlightedKey, setHighlightedKey] = useState("");
 
     const [isPending, startTransition] = useTransition();
 
@@ -281,6 +257,8 @@ const ListVerses = memo(
           behavior: "smooth",
           block: "center",
         });
+        setHighlightedKey(scrollKey);
+        dispatch(tagsPageActions.setScrollKey(""));
       }
     }, [scrollKey, isPending]);
 
@@ -288,6 +266,7 @@ const ListVerses = memo(
       //
       startTransition(() => {
         setStateVerses(quranService.getVerses(currentChapter));
+        setHighlightedKey("");
       });
     }, [currentChapter]);
 
@@ -305,7 +284,7 @@ const ListVerses = memo(
                 key={verse.key}
                 data-id={verse.key}
                 className={`tags-display-chapter-verses-item ${
-                  scrollKey === verse.key
+                  highlightedKey === verse.key
                     ? "tags-display-chapter-verses-item-highlighted"
                     : ""
                 }`}
@@ -313,10 +292,7 @@ const ListVerses = memo(
                 {versesTags[verse.key] !== undefined && (
                   <VerseTags versesTags={versesTags[verse.key]} tags={tags} />
                 )}
-                <ListVerseComponent
-                  verse={verse}
-                  dispatchTagsAction={dispatchTagsAction}
-                />
+                <ListVerseComponent verse={verse} />
                 <NoteText verseKey={verse.key} />
               </div>
             ))
@@ -329,43 +305,42 @@ const ListVerses = memo(
 
 interface ListVerseComponentProps {
   verse: verseProps;
-  dispatchTagsAction: Dispatch<tagsActionsProps>;
 }
 
-const ListVerseComponent = memo(
-  ({ verse, dispatchTagsAction }: ListVerseComponentProps) => {
-    function onClickTagVerse(verse: verseProps) {
-      dispatchTagsAction(tagsActions.setCurrentVerse(verse));
-    }
+const ListVerseComponent = memo(({ verse }: ListVerseComponentProps) => {
+  const dispatch = useAppDispatch();
 
-    function onClickVerse() {
-      dispatchTagsAction(tagsActions.setScrollKey(verse.key));
-    }
-
-    return (
-      <>
-        <VerseContainer extraClass="tags-display-chapter-verses-item-text">
-          {verse.versetext}{" "}
-          <span
-            className="tags-display-chapter-verses-item-text-btn"
-            onClick={onClickVerse}
-          >
-            ({verse.verseid})
-          </span>{" "}
-        </VerseContainer>
-        <ExpandButton identifier={verse.key} />
-        <button
-          className="btn"
-          data-bs-toggle="modal"
-          data-bs-target="#verseTagsModal"
-          onClick={() => onClickTagVerse(verse)}
-        >
-          🏷️
-        </button>
-      </>
-    );
+  function onClickTagVerse(verse: verseProps) {
+    dispatch(tagsPageActions.setCurrentVerse(verse));
   }
-);
+
+  function onClickVerse() {
+    dispatch(tagsPageActions.setScrollKey(verse.key));
+  }
+
+  return (
+    <>
+      <VerseContainer extraClass="tags-display-chapter-verses-item-text">
+        {verse.versetext}{" "}
+        <span
+          className="tags-display-chapter-verses-item-text-btn"
+          onClick={onClickVerse}
+        >
+          ({verse.verseid})
+        </span>{" "}
+      </VerseContainer>
+      <ExpandButton identifier={verse.key} />
+      <button
+        className="btn"
+        data-bs-toggle="modal"
+        data-bs-target="#verseTagsModal"
+        onClick={() => onClickTagVerse(verse)}
+      >
+        🏷️
+      </button>
+    </>
+  );
+});
 
 ListVerseComponent.displayName = "ListVerseComponent";
 
