@@ -2,16 +2,6 @@
 
 This project is an App that allows you to browse the Quran and write your notes/reflections below the verses, everything will be saved in the application.
 
-## Table of contents
-
-- [Install](#Install)
-- [How to use](#How-to-use)
-- [Disclaimer](#Disclaimer)
-- [Known bugs](#Known-bugs)
-- [Credits](#Credits)
-- [Local development](#Local-development)
-- [Future project](#Future-project)
-
 ## Install
 
 Download and install:
@@ -48,7 +38,7 @@ Prerequisites:
 - Node.js
 - npm
 
-Once you have satisfied the prerequisites, you can install and start the application. Clone the app, and from its directory run:
+Clone the app, and from its directory run:
 
 1. `npm install`
 2. `npm run start`
