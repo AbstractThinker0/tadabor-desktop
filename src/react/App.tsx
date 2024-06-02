@@ -12,7 +12,7 @@ import Comparator from "./pages/Comparator";
 import Searcher from "./pages/Searcher";
 import Searcher2 from "./pages/Searcher2";
 
-function App() {
+const App = () => {
   return (
     <Routes>
       <Route path="/" element={<QuranBrowser />} />
@@ -29,6 +29,6 @@ function App() {
       <Route path="*" element={<QuranBrowser />} />
     </Routes>
   );
-}
+};
 
 export default App;

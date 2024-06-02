@@ -1,44 +1,38 @@
 import { useEffect, useState } from "react";
 
-import useQuran from "@/context/useQuran";
-
 import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
 import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
 import { tagsPageActions } from "@/store/slices/pages/tags";
 
-import { selectedChaptersType } from "@/types";
 import { dbFuncs } from "@/util/db";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
-import { tagsProps, versesTagsProps } from "@/components/Tags/consts";
-import TagsSide from "@/components/Tags/TagsSide";
-import TagsDisplay from "@/components/Tags/TagsDisplay";
+import { tagsProps, versesTagsProps } from "@/components/Pages/Tags/consts";
+import TagsSide from "@/components/Pages/Tags/TagsSide";
+import TagsDisplay from "@/components/Pages/Tags/TagsDisplay";
+
+import "@/styles/pages/tags.scss";
 
 function Tags() {
-  const quranService = useQuran();
-
   const [loadingState, setLoadingState] = useState(true);
-  const tagsState = useAppSelector((state) => state.tagsPage);
+
   const dispatch = useAppDispatch();
   const isVNotesLoading = useAppSelector(isVerseNotesLoading());
+  const tagsState = useAppSelector((state) => state.tagsPage);
 
   useEffect(() => {
     let clientLeft = false;
 
-    // Check if we need to set default selected chapters
-    if (!Object.keys(tagsState.selectedChapters).length) {
-      const initialSelectedChapters: selectedChaptersType = {};
+    async function fetchSavedTags() {
+      // Check if we already fetched tags
+      if (Object.keys(tagsState.tags).length) {
+        setLoadingState(false);
+        return;
+      }
 
-      quranService.chapterNames.forEach((chapter) => {
-        initialSelectedChapters[chapter.id] = true;
-      });
-
-      dispatch(tagsPageActions.setSelectedChapters(initialSelectedChapters));
-    }
-
-    async function fetchData() {
       const savedTags = await dbFuncs.loadTags();
+      const versesTags = await dbFuncs.loadVersesTags();
 
       if (clientLeft) return;
 
@@ -49,10 +43,6 @@ function Tags() {
       });
 
       dispatch(tagsPageActions.setTags(initialTags));
-
-      const versesTags = await dbFuncs.loadVersesTags();
-
-      if (clientLeft) return;
 
       const initialVersesTags: versesTagsProps = {};
 
@@ -65,7 +55,7 @@ function Tags() {
       setLoadingState(false);
     }
 
-    fetchData();
+    fetchSavedTags();
     dispatch(fetchVerseNotes());
 
     return () => {

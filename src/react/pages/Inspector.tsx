@@ -1,27 +1,26 @@
-import { useEffect, useReducer } from "react";
+import { useEffect } from "react";
 
 import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
 import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
+import { inspectorPageActions } from "@/store/slices/pages/inspector";
 
 import ChaptersList from "@/components/Custom/ChaptersList";
-import Display from "@/components/Inspector/Display";
-import isReducer from "@/components/Inspector/isReducer";
-import { stateProps, isActions } from "@/components/Inspector/consts";
+
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+
+import Display from "@/components/Pages/Inspector/Display";
+
+import "@/styles/pages/inspector.scss";
 
 function Inspector() {
   const dispatch = useAppDispatch();
   const isVNotesLoading = useAppSelector(isVerseNotesLoading());
 
-  const initialState: stateProps = {
-    currentChapter: 1,
-    scrollKey: "",
-  };
-
-  const [state, dispatchIsAction] = useReducer(isReducer, initialState);
+  const state = useAppSelector((state) => state.inspectorPage);
 
   function handleSelectChapter(chapterID: number) {
-    dispatchIsAction(isActions.setChapter(chapterID));
+    dispatch(inspectorPageActions.setCurrentChapter(chapterID));
+    dispatch(inspectorPageActions.setScrollKey(""));
   }
 
   useEffect(() => {
@@ -44,7 +43,6 @@ function Inspector() {
       ) : (
         <Display
           currentChapter={state.currentChapter}
-          dispatchIsAction={dispatchIsAction}
           scrollKey={state.scrollKey}
         />
       )}

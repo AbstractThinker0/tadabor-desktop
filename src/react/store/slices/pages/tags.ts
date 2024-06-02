@@ -1,7 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { selectedChaptersType, verseProps } from "@/types";
-import { tagProps, tagsProps, versesTagsProps } from "@/components/Tags/consts";
+import {
+  tagProps,
+  tagsProps,
+  versesTagsProps,
+} from "@/components/Pages/Tags/consts";
+import { initialSelectedChapters } from "@/util/consts";
 
 interface tagsStateProps {
   currentChapter: number;
@@ -16,7 +21,7 @@ interface tagsStateProps {
 
 const initialState: tagsStateProps = {
   currentChapter: 1,
-  selectedChapters: {},
+  selectedChapters: initialSelectedChapters,
   tags: {},
   currentTag: null,
   versesTags: {},
@@ -31,6 +36,7 @@ const tagsPageSlice = createSlice({
   reducers: {
     setChapter: (state, action: PayloadAction<number>) => {
       state.currentChapter = action.payload;
+      state.scrollKey = "";
     },
     setSelectedChapters: (
       state,

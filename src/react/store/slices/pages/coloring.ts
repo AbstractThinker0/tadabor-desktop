@@ -1,7 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { selectedChaptersType, verseProps } from "@/types";
-import { coloredProps, colorProps } from "@/components/Coloring/consts";
+import { coloredProps, colorProps } from "@/components/Pages/Coloring/consts";
+import { initialSelectedChapters } from "@/util/consts";
 
 export interface stateProps {
   currentChapter: number;
@@ -21,7 +22,7 @@ const initialState: stateProps = {
   coloredVerses: {},
   currentVerse: null,
   currentColor: null,
-  selectedChapters: {},
+  selectedChapters: initialSelectedChapters,
   scrollKey: "",
 };
 
@@ -31,6 +32,7 @@ const coloringPageSlice = createSlice({
   reducers: {
     setChapter: (state, action: PayloadAction<number>) => {
       state.currentChapter = action.payload;
+      state.scrollKey = "";
     },
     setColorsList: (state, action: PayloadAction<coloredProps>) => {
       state.colorsList = action.payload;

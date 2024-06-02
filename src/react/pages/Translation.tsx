@@ -1,27 +1,30 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 import { isTransNotesLoading, useAppDispatch, useAppSelector } from "@/store";
 import { fetchTransNotes } from "@/store/slices/global/transNotes";
+import { translationPageActions } from "@/store/slices/pages/translation";
 
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import ChaptersList from "@/components/Custom/ChaptersList";
-import DisplayPanel from "@/components/Translation/DisplayPanel";
+import DisplayPanel from "@/components/Pages/Translation/DisplayPanel";
+
+import "@/styles/pages/translation.scss";
 
 const Translation = () => {
-  const [selectChapter, setSelectChapter] = useState(1);
   const { t } = useTranslation();
 
   const dispatch = useAppDispatch();
   const isTNotesLoading = useAppSelector(isTransNotesLoading());
+  const { currentChapter } = useAppSelector((state) => state.translationPage);
 
   useEffect(() => {
     dispatch(fetchTransNotes());
   }, []);
 
   const handleChapterChange = (chapter: number) => {
-    setSelectChapter(chapter);
+    dispatch(translationPageActions.setCurrentChapter(chapter));
   };
 
   return (
@@ -30,7 +33,7 @@ const Translation = () => {
         <h4 className="side-chapters-title">{t("roots_list")}</h4>
         <ChaptersList
           handleChapterChange={handleChapterChange}
-          selectChapter={selectChapter}
+          selectChapter={currentChapter}
           mainClass="side-chapters"
           inputClass="side-chapters-input"
         />
@@ -38,7 +41,7 @@ const Translation = () => {
       {isTNotesLoading ? (
         <LoadingSpinner />
       ) : (
-        <DisplayPanel selectChapter={selectChapter} />
+        <DisplayPanel selectChapter={currentChapter} />
       )}
     </div>
   );

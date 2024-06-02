@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import { isVerseNotesLoading, useAppDispatch, useAppSelector } from "@/store";
 import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
+import { searcher2PageActions } from "@/store/slices/pages/searcher2";
 
 import useQuran from "@/context/useQuran";
 import { verseMatchResult } from "@/types";
@@ -23,32 +24,49 @@ import { ExpandButton } from "@/components/Generic/Buttons";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
 
+import "@/styles/pages/searcher2.scss";
+
 const Searcher2 = () => {
   const refVerseButton = useRef<HTMLButtonElement>(null);
 
   const { t } = useTranslation();
-  const [verseTab, setVerseTab] = useState("");
-  const [dummyCounter, setDummyCounter] = useState(0);
-  const dispatch = useAppDispatch();
-  const isVNotesLoading = useAppSelector(isVerseNotesLoading());
 
-  const handleVerseTab = (verseKey: string) => {
-    setVerseTab(verseKey);
-    setDummyCounter((prev) => prev + 1);
-  };
+  const dispatch = useAppDispatch();
+
+  const { verseTab, showQuranTab, scrollKey } = useAppSelector(
+    (state) => state.searcher2Page
+  );
 
   useEffect(() => {
     //
+    if (!showQuranTab) return;
+
     if (!verseTab) return;
 
     if (!refVerseButton.current) return;
 
+    if (refVerseButton.current.classList.contains("show")) return;
+
     refVerseButton.current.click();
-  }, [verseTab, dummyCounter]);
+  }, [verseTab, showQuranTab]);
 
   useEffect(() => {
     dispatch(fetchVerseNotes());
   }, []);
+
+  const handleVerseTab = (verseKey: string) => {
+    dispatch(searcher2PageActions.setVerseTab(verseKey));
+    dispatch(searcher2PageActions.setScrollKey(verseKey));
+  };
+
+  const handleClickTab = () => {
+    dispatch(searcher2PageActions.setShowQuranTab(false));
+    dispatch(searcher2PageActions.setScrollKey(""));
+  };
+
+  const handleClickQuranTab = () => {
+    dispatch(searcher2PageActions.setShowQuranTab(true));
+  };
 
   return (
     <div className="searcher2">
@@ -58,55 +76,54 @@ const Searcher2 = () => {
           identifier="search"
           extraClass="active"
           ariaSelected={true}
+          handleClickTab={handleClickTab}
         />
         {verseTab && (
-          <li className="nav-item" role="presentation">
-            <button
-              className="nav-link "
-              id={`verse-tab`}
-              data-bs-toggle="tab"
-              data-bs-target={`#verse-tab-pane`}
-              type="button"
-              role="tab"
-              aria-controls={`verse-tab-pane`}
-              ref={refVerseButton}
-            >
-              {verseTab}
-            </button>
-          </li>
+          <TabButton
+            text={verseTab}
+            identifier="verse"
+            refButton={refVerseButton}
+            handleClickTab={handleClickQuranTab}
+          />
         )}
       </ul>
-      {isVNotesLoading ? (
-        <LoadingSpinner />
-      ) : (
-        <TabContent
-          verseTab={verseTab}
-          dummyCounter={dummyCounter}
-          handleVerseTab={handleVerseTab}
-        />
-      )}
+      <TabContent
+        verseTab={verseTab}
+        scrollKey={scrollKey}
+        handleVerseTab={handleVerseTab}
+      />
     </div>
   );
 };
 
 interface TabContentProps {
   verseTab: string;
-  dummyCounter: number;
+  scrollKey: string;
   handleVerseTab: (verseKey: string) => void;
 }
 
 const TabContent = ({
   verseTab,
-  dummyCounter,
+  scrollKey,
   handleVerseTab,
 }: TabContentProps) => {
+  const dispatch = useAppDispatch();
+
+  const setScrollKey = (key: string) => {
+    dispatch(searcher2PageActions.setScrollKey(key));
+  };
+
   return (
     <div className="tab-content" id="myTabContent">
       <TabPanel identifier="search" extraClass="show active">
         <Searcher2Tab handleVerseTab={handleVerseTab} />
       </TabPanel>
       {verseTab ? (
-        <QuranTab verseKey={verseTab} dummyProp={dummyCounter} />
+        <QuranTab
+          verseKey={verseTab}
+          scrollKey={scrollKey}
+          setScrollKey={setScrollKey}
+        />
       ) : (
         ""
       )}
@@ -120,17 +137,22 @@ interface Searcher2TabProps {
 
 const Searcher2Tab = ({ handleVerseTab }: Searcher2TabProps) => {
   const quranService = useQuran();
-  const [searchString, setSearchString] = useState("");
+
   const [isPending, startTransition] = useTransition();
   const [stateVerses, setStateVerses] = useState<verseMatchResult[]>([]);
   const [itemsCount, setItemsCount] = useState(80);
-  const [searchIdentical, setSearchIdentical] = useState(false);
-  const [searchDiacritics, setSearchDiacritics] = useState(false);
-  const [searchStart, setSearchStart] = useState(false);
+
   const { t } = useTranslation();
 
+  const dispatch = useAppDispatch();
+
+  const { searchString, searchIdentical, searchDiacritics, searchStart } =
+    useAppSelector((state) => state.searcher2Page);
+
+  const isVNotesLoading = useAppSelector(isVerseNotesLoading());
+
   const searchStringHandle = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchString(event.target.value);
+    dispatch(searcher2PageActions.setSearchString(event.target.value));
   };
 
   function handleScroll(event: React.UIEvent<HTMLDivElement>) {
@@ -142,17 +164,17 @@ const Searcher2Tab = ({ handleVerseTab }: Searcher2TabProps) => {
   }
 
   const handleCheckboxDiacritics = (status: boolean) => {
-    setSearchDiacritics(status);
+    dispatch(searcher2PageActions.setSearchDiacritics(status));
   };
 
   const handleCheckboxIdentical = (status: boolean) => {
-    setSearchIdentical(status);
-    setSearchStart(false);
+    dispatch(searcher2PageActions.setSearchIdentical(status));
+    dispatch(searcher2PageActions.setSearchStart(false));
   };
 
   const handleCheckboxStart = (status: boolean) => {
-    setSearchStart(status);
-    setSearchIdentical(false);
+    dispatch(searcher2PageActions.setSearchStart(status));
+    dispatch(searcher2PageActions.setSearchIdentical(false));
   };
 
   useEffect(() => {
@@ -237,11 +259,11 @@ const Searcher2Tab = ({ handleVerseTab }: Searcher2TabProps) => {
       </div>
       <div className="searcher2-searchpanel-display">
         <div
-          className="searcher2-searchpanel-display-list "
+          className="searcher2-searchpanel-display-list"
           dir="rtl"
           onScroll={handleScroll}
         >
-          {isPending ? (
+          {isPending || isVNotesLoading ? (
             <LoadingSpinner />
           ) : (
             stateVerses.slice(0, itemsCount).map((verseMatch) => (

@@ -8,9 +8,16 @@ import rootNotesReducer from "@/store/slices/global/rootNotes";
 
 import settingsReducer from "@/store/slices/global/settings";
 
+import qbPageReducer from "@/store/slices/pages/quranBrowser";
+import rbPageReducer from "@/store/slices/pages/rootsBrowser";
 import searcherPageReducer from "@/store/slices/pages/searcher";
+import searcher2PageReducer from "@/store/slices/pages/searcher2";
 import coloringPageReducer from "@/store/slices/pages/coloring";
 import tagsPageReducer from "@/store/slices/pages/tags";
+import inspectorPageReducer from "@/store/slices/pages/inspector";
+import translationPageReducer from "@/store/slices/pages/translation";
+import comparatorPageReducer from "@/store/slices/pages/comparator";
+import ynPageReducer from "@/store/slices/pages/yourNotes";
 
 const store = configureStore({
   reducer: {
@@ -21,10 +28,23 @@ const store = configureStore({
 
     settings: settingsReducer,
 
+    qbPage: qbPageReducer,
+    rbPage: rbPageReducer,
     searcherPage: searcherPageReducer,
+    searcher2Page: searcher2PageReducer,
     coloringPage: coloringPageReducer,
     tagsPage: tagsPageReducer,
+    inspectorPage: inspectorPageReducer,
+    translationPage: translationPageReducer,
+    comparatorPage: comparatorPageReducer,
+    ynPage: ynPageReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActionPaths: ["payload.quranInstance"],
+      },
+    }),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

@@ -9,9 +9,10 @@ import {
 } from "@/store";
 import { fetchRootNotes } from "@/store/slices/global/rootNotes";
 import { fetchVerseNotes } from "@/store/slices/global/verseNotes";
+import { rbPageActions } from "@/store/slices/pages/rootsBrowser";
 
-import SearchForm from "@/components/RootsBrowser/SearchForm";
-import RootsList from "@/components/RootsBrowser/RootsList";
+import SearchForm from "@/components/Pages/RootsBrowser/SearchForm";
+import RootsList from "@/components/Pages/RootsBrowser/RootsList";
 
 import { rootProps } from "@/types";
 
@@ -19,26 +20,42 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import { TabButton, TabPanel } from "@/components/Generic/Tabs";
 import QuranTab from "@/components/Custom/QuranTab";
 
+import "@/styles/pages/roots.scss";
+
 const RootsBrowser = () => {
   const refVerseButton = useRef<HTMLButtonElement>(null);
 
   const { t } = useTranslation();
-  const [verseTab, setVerseTab] = useState("");
-  const [dummyCounter, setDummyCounter] = useState(0);
+  const dispatch = useAppDispatch();
+  const { showQuranTab, verseTab, scrollKey } = useAppSelector(
+    (state) => state.rbPage
+  );
 
   const handleVerseTab = (verseKey: string) => {
-    setVerseTab(verseKey);
-    setDummyCounter((prev) => prev + 1);
+    dispatch(rbPageActions.setVerseTab(verseKey));
+    dispatch(rbPageActions.setScrollKey(verseKey));
+  };
+
+  const handleClickTab = () => {
+    dispatch(rbPageActions.setShowQuranTab(false));
+    dispatch(rbPageActions.setScrollKey(""));
+  };
+
+  const handleClickQuranTab = () => {
+    dispatch(rbPageActions.setShowQuranTab(true));
   };
 
   useEffect(() => {
-    //
+    if (!showQuranTab) return;
+
     if (!verseTab) return;
 
     if (!refVerseButton.current) return;
 
+    if (refVerseButton.current.classList.contains("show")) return;
+
     refVerseButton.current.click();
-  }, [verseTab, dummyCounter]);
+  }, [verseTab, showQuranTab]);
 
   return (
     <div className="roots">
@@ -48,27 +65,20 @@ const RootsBrowser = () => {
           identifier="search"
           extraClass="active"
           ariaSelected={true}
+          handleClickTab={handleClickTab}
         />
         {verseTab && (
-          <li className="nav-item" role="presentation">
-            <button
-              className="nav-link "
-              id={`verse-tab`}
-              data-bs-toggle="tab"
-              data-bs-target={`#verse-tab-pane`}
-              type="button"
-              role="tab"
-              aria-controls={`verse-tab-pane`}
-              ref={refVerseButton}
-            >
-              {verseTab}
-            </button>
-          </li>
+          <TabButton
+            text={verseTab}
+            identifier="verse"
+            refButton={refVerseButton}
+            handleClickTab={handleClickQuranTab}
+          />
         )}
       </ul>
       <TabContent
-        verse_tab={verseTab}
-        press_dummy={dummyCounter}
+        verseTab={verseTab}
+        scrollKey={scrollKey}
         handleVerseTab={handleVerseTab}
       />
     </div>
@@ -76,23 +86,33 @@ const RootsBrowser = () => {
 };
 
 interface TabContentProps {
-  verse_tab: string;
-  press_dummy: number;
+  verseTab: string;
+  scrollKey: string;
   handleVerseTab: (verseKey: string) => void;
 }
 
 const TabContent = ({
-  verse_tab,
-  press_dummy,
+  verseTab,
   handleVerseTab,
+  scrollKey,
 }: TabContentProps) => {
+  const dispatch = useAppDispatch();
+
+  const setScrollKey = (key: string) => {
+    dispatch(rbPageActions.setScrollKey(key));
+  };
+
   return (
     <div className="tab-content" id="myTabContent">
       <TabPanel identifier="search" extraClass="show active">
         <RootsPanel handleVerseTab={handleVerseTab} />
       </TabPanel>
-      {verse_tab ? (
-        <QuranTab verseKey={verse_tab} dummyProp={press_dummy} />
+      {verseTab ? (
+        <QuranTab
+          verseKey={verseTab}
+          scrollKey={scrollKey}
+          setScrollKey={setScrollKey}
+        />
       ) : (
         ""
       )}
@@ -109,8 +129,10 @@ const RootsPanel = ({ handleVerseTab }: RootsPanelProps) => {
   const isRNotesLoading = useAppSelector(isRootNotesLoading());
   const isVNotesLoading = useAppSelector(isVerseNotesLoading());
 
-  const [searchString, setSearchString] = useState("");
-  const [searchInclusive, setSearchInclusive] = useState(false);
+  const { searchString, searchInclusive } = useAppSelector(
+    (state) => state.rbPage
+  );
+
   const [stateRoots, setStateRoots] = useState<rootProps[]>([]);
 
   useEffect(() => {
@@ -127,8 +149,6 @@ const RootsPanel = ({ handleVerseTab }: RootsPanelProps) => {
       <SearchForm
         searchString={searchString}
         searchInclusive={searchInclusive}
-        setSearchString={setSearchString}
-        setSearchInclusive={setSearchInclusive}
         stateRoots={stateRoots}
       />
 

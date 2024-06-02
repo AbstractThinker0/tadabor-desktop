@@ -16,16 +16,18 @@ interface RootsObject {
 
 interface SearcherPageState {
   search_roots: RootsObject;
-  verse_tab: string;
-  press_dummy: number;
+  verseTab: string;
+  showQuranTab: boolean;
   verses_count: number;
+  scrollKey: string;
 }
 
 const initialState: SearcherPageState = {
   search_roots: {},
-  verse_tab: "",
-  press_dummy: 0,
+  verseTab: "",
+  showQuranTab: false,
   verses_count: 0,
+  scrollKey: "",
 };
 
 const searcherPageSlice = createSlice({
@@ -40,14 +42,20 @@ const searcherPageSlice = createSlice({
       const { root_id } = action.payload;
       delete state.search_roots[root_id];
     },
+    setShowQuranTab: (state, action: PayloadAction<boolean>) => {
+      state.showQuranTab = action.payload;
+    },
     setVerseTab: (state, action: PayloadAction<string>) => {
       //
-      state.verse_tab = action.payload;
-      state.press_dummy = state.press_dummy + 1;
+      state.verseTab = action.payload;
+      state.showQuranTab = true;
     },
     setVersesCount: (state, action: PayloadAction<number>) => {
       //
       state.verses_count = action.payload;
+    },
+    setScrollKey: (state, action: PayloadAction<string>) => {
+      state.scrollKey = action.payload;
     },
   },
 });
