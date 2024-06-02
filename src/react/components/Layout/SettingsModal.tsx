@@ -14,8 +14,6 @@ import {
 import VerseContainer from "@/components/Custom/VerseContainer";
 import { nfsDefault, nfsStored, qfsDefault, qfsStored } from "@/util/consts";
 
-import "@/styles/pages/settings.scss";
-
 const SettingsModal = () => {
   const { i18n } = useTranslation();
   const resolvedLang = i18n.resolvedLanguage;

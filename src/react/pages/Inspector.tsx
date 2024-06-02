@@ -10,8 +10,6 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import Display from "@/components/Pages/Inspector/Display";
 
-import "@/styles/pages/inspector.scss";
-
 function Inspector() {
   const dispatch = useAppDispatch();
   const isVNotesLoading = useAppSelector(isVerseNotesLoading());

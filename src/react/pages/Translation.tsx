@@ -10,8 +10,6 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import ChaptersList from "@/components/Custom/ChaptersList";
 import DisplayPanel from "@/components/Pages/Translation/DisplayPanel";
 
-import "@/styles/pages/translation.scss";
-
 const Translation = () => {
   const { t } = useTranslation();
 
