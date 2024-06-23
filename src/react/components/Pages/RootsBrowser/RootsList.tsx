@@ -25,6 +25,7 @@ import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
 import NoteText from "@/components/Custom/NoteText";
 import VerseContainer from "@/components/Custom/VerseContainer";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
+import { CollapseContent } from "@/components/Generic/Collapse";
 
 interface RootsListProps {
   searchInclusive: boolean;
@@ -102,6 +103,8 @@ const RootsList = memo(
   }
 );
 
+RootsList.displayName = "RootsList";
+
 interface RootComponentProps {
   root_occurences: string[];
   root_name: string;
@@ -170,9 +173,9 @@ const RootComponent = memo(
             <button
               type="button"
               data-bs-toggle="collapse"
-              data-bs-target={"#collapseOccs" + root_id}
+              data-bs-target={`#collapseOccs${root_id}`}
               aria-expanded="false"
-              aria-controls={"collapseOccs" + root_id}
+              aria-controls={`collapseOccs${root_id}`}
               className="btn roots-panel-list-item-title-btns-derivations"
               value={root_id}
             >
@@ -199,6 +202,8 @@ const RootComponent = memo(
     );
   }
 );
+
+RootComponent.displayName = "RootComponent";
 
 interface RootOccurencesProps {
   root_occurences: string[];
@@ -308,7 +313,10 @@ const RootOccurences = ({
   }, [scrollKey]);
 
   return (
-    <div ref={refCollapse} className="collapse" id={`collapseOccs${root_id}`}>
+    <CollapseContent
+      refCollapse={refCollapse}
+      identifier={`collapseOccs${root_id}`}
+    >
       {isShown && (
         <div
           className="roots-panel-list-item-verses p-3"
@@ -334,7 +342,7 @@ const RootOccurences = ({
           ))}
         </div>
       )}
-    </div>
+    </CollapseContent>
   );
 };
 

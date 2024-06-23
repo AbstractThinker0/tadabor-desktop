@@ -1,3 +1,20 @@
+interface TabNavbarProps {
+  extraClass?: string;
+  children?: React.ReactNode | undefined;
+}
+
+const TabNavbar = ({ children, extraClass = "" }: TabNavbarProps) => {
+  return (
+    <ul
+      className={"nav nav-tabs ".concat(extraClass)}
+      id="myTab"
+      role="tablist"
+    >
+      {children}
+    </ul>
+  );
+};
+
 interface TabButtonProps {
   text: string;
   identifier: string;
@@ -59,4 +76,16 @@ const TabPanel = ({ identifier, extraClass = "", children }: TabPanelProps) => {
   );
 };
 
-export { TabButton, TabPanel };
+interface TabContentProps {
+  children?: React.ReactNode | undefined;
+}
+
+const TabContent = ({ children }: TabContentProps) => {
+  return (
+    <div className="tab-content" id="myTabContent">
+      {children}
+    </div>
+  );
+};
+
+export { TabNavbar, TabButton, TabContent, TabPanel };

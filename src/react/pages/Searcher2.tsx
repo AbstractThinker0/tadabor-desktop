@@ -7,19 +7,19 @@ import { searcher2PageActions } from "@/store/slices/pages/searcher2";
 
 import useQuran from "@/context/useQuran";
 import { verseMatchResult } from "@/types";
-import {
-  searchVerse,
-  onlySpaces,
-  removeDiacritics,
-  normalizeAlif,
-} from "@/util/util";
+import { quranSearcher } from "@/util/quranSearch";
 
 import NoteText from "@/components/Custom/NoteText";
 import QuranTab from "@/components/Custom/QuranTab";
 import VerseContainer from "@/components/Custom/VerseContainer";
 import Checkbox from "@/components/Custom/Checkbox";
 
-import { TabButton, TabPanel } from "@/components/Generic/Tabs";
+import {
+  TabButton,
+  TabContent,
+  TabNavbar,
+  TabPanel,
+} from "@/components/Generic/Tabs";
 import { ExpandButton } from "@/components/Generic/Buttons";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
@@ -66,9 +66,13 @@ const Searcher2 = () => {
     dispatch(searcher2PageActions.setShowQuranTab(true));
   };
 
+  const setScrollKey = (key: string) => {
+    dispatch(searcher2PageActions.setScrollKey(key));
+  };
+
   return (
     <div className="searcher2">
-      <ul className="nav nav-tabs" id="myTab" role="tablist">
+      <TabNavbar>
         <TabButton
           text={t("searcher_search")}
           identifier="search"
@@ -84,47 +88,21 @@ const Searcher2 = () => {
             handleClickTab={handleClickQuranTab}
           />
         )}
-      </ul>
-      <TabContent
-        verseTab={verseTab}
-        scrollKey={scrollKey}
-        handleVerseTab={handleVerseTab}
-      />
-    </div>
-  );
-};
-
-interface TabContentProps {
-  verseTab: string;
-  scrollKey: string;
-  handleVerseTab: (verseKey: string) => void;
-}
-
-const TabContent = ({
-  verseTab,
-  scrollKey,
-  handleVerseTab,
-}: TabContentProps) => {
-  const dispatch = useAppDispatch();
-
-  const setScrollKey = (key: string) => {
-    dispatch(searcher2PageActions.setScrollKey(key));
-  };
-
-  return (
-    <div className="tab-content" id="myTabContent">
-      <TabPanel identifier="search" extraClass="show active">
-        <Searcher2Tab handleVerseTab={handleVerseTab} />
-      </TabPanel>
-      {verseTab ? (
-        <QuranTab
-          verseKey={verseTab}
-          scrollKey={scrollKey}
-          setScrollKey={setScrollKey}
-        />
-      ) : (
-        ""
-      )}
+      </TabNavbar>
+      <TabContent>
+        <TabPanel identifier="search" extraClass="show active">
+          <Searcher2Tab handleVerseTab={handleVerseTab} />
+        </TabPanel>
+        {verseTab ? (
+          <QuranTab
+            verseKey={verseTab}
+            scrollKey={scrollKey}
+            setScrollKey={setScrollKey}
+          />
+        ) : (
+          ""
+        )}
+      </TabContent>
     </div>
   );
 };
@@ -167,49 +145,21 @@ const Searcher2Tab = ({ handleVerseTab }: Searcher2TabProps) => {
 
   const handleCheckboxIdentical = (status: boolean) => {
     dispatch(searcher2PageActions.setSearchIdentical(status));
-    dispatch(searcher2PageActions.setSearchStart(false));
   };
 
   const handleCheckboxStart = (status: boolean) => {
     dispatch(searcher2PageActions.setSearchStart(status));
-    dispatch(searcher2PageActions.setSearchIdentical(false));
   };
 
   useEffect(() => {
     startTransition(() => {
-      const getSearchResult = () => {
-        const matchVerses: verseMatchResult[] = [];
+      const result = quranSearcher.byWord(searchString, quranService, "all", {
+        searchDiacritics,
+        searchIdentical,
+        searchStart,
+      });
 
-        const quranText = quranService.absoluteQuran;
-
-        // Check if we search with diacritics or they should be stripped off
-        const normalizedToken = searchDiacritics
-          ? searchString
-          : normalizeAlif(removeDiacritics(searchString));
-
-        // If an empty search token don't initiate a search
-        if (onlySpaces(normalizedToken)) {
-          return matchVerses;
-        }
-
-        for (const verse of quranText) {
-          const result = searchVerse(
-            verse,
-            normalizedToken,
-            searchIdentical,
-            searchDiacritics,
-            searchStart
-          );
-
-          if (result) {
-            matchVerses.push(result);
-          }
-        }
-
-        return matchVerses;
-      };
-
-      setStateVerses(getSearchResult());
+      setStateVerses(result || []);
     });
   }, [searchString, searchIdentical, searchDiacritics, searchStart]);
 

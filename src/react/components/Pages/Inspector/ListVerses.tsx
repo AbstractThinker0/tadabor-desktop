@@ -25,6 +25,7 @@ import {
 import { ExpandButton } from "@/components/Generic/Buttons";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
+import { CollapseContent } from "@/components/Generic/Collapse";
 
 import NoteText from "@/components/Custom/NoteText";
 import VerseContainer from "@/components/Custom/VerseContainer";
@@ -151,10 +152,10 @@ const VerseWords = ({
 
     setCurrentRoots(wordRoots.sort((a, b) => b.name.length - a.name.length));
 
-    if (selectedWord === index - 1) {
+    if (selectedWord === index) {
       setSelectedWord(-1);
     } else {
-      setSelectedWord(index - 1);
+      setSelectedWord(index);
     }
 
     if (refCollapse.current) {
@@ -180,7 +181,7 @@ const VerseWords = ({
             <span
               onClick={() => onClickWord(index + 1)}
               className={`display-verses-item-text-word ${
-                selectedWord === index
+                selectedWord === index + 1
                   ? "display-verses-item-text-word-selected"
                   : ""
               }`}
@@ -196,10 +197,9 @@ const VerseWords = ({
         <ExpandButton identifier={verseKey} />
       </VerseContainer>
       <NoteText verseKey={verseKey} />
-      <div
-        ref={refCollapsible}
-        className="collapse"
-        id={`collapseExample${verseRank}`}
+      <CollapseContent
+        refCollapse={refCollapsible}
+        identifier={`collapseExample${verseRank}`}
       >
         <div className="card card-body">
           <div
@@ -229,7 +229,7 @@ const VerseWords = ({
             ))}
           </div>
         </div>
-      </div>
+      </CollapseContent>
     </>
   );
 };
@@ -344,10 +344,10 @@ const RootOccurences = ({
   }, [scrollKey]);
 
   return (
-    <div
-      ref={refCollapse}
-      id={`panelsStayOpen-${verseRank}-${rootID}`}
-      className="accordion-collapse collapse"
+    <CollapseContent
+      refCollapse={refCollapse}
+      identifier={`panelsStayOpen-${verseRank}-${rootID}`}
+      extraClass="accordion-collapse"
     >
       {isShown && (
         <div
@@ -374,7 +374,7 @@ const RootOccurences = ({
           </div>
         </div>
       )}
-    </div>
+    </CollapseContent>
   );
 };
 

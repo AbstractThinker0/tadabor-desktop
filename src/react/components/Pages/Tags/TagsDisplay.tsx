@@ -212,7 +212,7 @@ const SelectedVerseComponent = ({ verse }: SelectedVerseComponentProps) => {
           onClick={() => onClickVerse(verse)}
           className="tags-display-chapter-verses-item-verse"
         >
-          ({quranService.getChapterName(verse.suraid) + ":" + verse.verseid})
+          ({`${quranService.getChapterName(verse.suraid)}:${verse.verseid}`})
         </span>
       </VerseContainer>
       <ExpandButton identifier={verse.key} />
@@ -297,6 +297,8 @@ const ListVerses = memo(
     );
   }
 );
+
+ListVerses.displayName = "ListVerses";
 
 interface ListVerseComponentProps {
   verse: verseProps;

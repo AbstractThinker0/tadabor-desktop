@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useAppSelector } from "@/store";
 
 import TextareaToolbar from "@/components/Generic/TextareaToolbar";
+import { CollapseContent } from "@/components/Generic/Collapse";
 
 interface TextFormProps {
   inputKey: string;
@@ -120,13 +121,13 @@ const TextCollapsible = ({
   }, []);
 
   return (
-    <div
-      className={`collapse ${className}`}
-      id={`collapseExample${targetID}`}
-      ref={collapseRef}
+    <CollapseContent
+      extraClass={className}
+      identifier={`collapseExample${targetID}`}
+      refCollapse={collapseRef}
     >
       {children}
-    </div>
+    </CollapseContent>
   );
 };
 
@@ -165,12 +166,12 @@ const TextComponent = ({
 
 interface TextContainerProps {
   inputValue: string;
-  inputDirection: string;
+  inputDirection?: string;
   className?: string;
 }
 
 const TextContainer = ({
-  inputDirection,
+  inputDirection = "",
   inputValue,
   className = "",
 }: TextContainerProps) => {
