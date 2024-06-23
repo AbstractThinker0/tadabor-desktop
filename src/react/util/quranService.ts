@@ -1,3 +1,5 @@
+import { removeDiacritics, splitArabicLetters } from "@/util/util";
+
 import { chapterProps, quranProps, rootProps, verseProps } from "@/types";
 
 class quranClass {
@@ -49,7 +51,7 @@ class quranClass {
 
   convertKeyToSuffix(key: string): string {
     const info = key.split("-");
-    return this.getChapterName(info[0]) + ":" + info[1];
+    return `${this.getChapterName(info[0])}:${info[1]}`;
   }
 
   getRootByID = (rootID: string | number) => {
@@ -64,6 +66,17 @@ class quranClass {
   getRootByName = (rootName: string) => {
     const root = this.quranRoots.find((root) => root.name === rootName);
     return root;
+  };
+
+  getLetterByKey = (letterKey: string) => {
+    const verseIndexes = letterKey.split(":");
+    const verseText = this.getVerseByKey(verseIndexes[0]).versetext;
+    const verseWords = verseText.split(" ");
+    const letterIndexes = verseIndexes[1].split("-");
+    const letterSplit = splitArabicLetters(
+      verseWords[Number(letterIndexes[0])]
+    )[Number(letterIndexes[1])];
+    return removeDiacritics(letterSplit);
   };
 }
 

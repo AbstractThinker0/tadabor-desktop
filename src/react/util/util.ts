@@ -1,8 +1,16 @@
 import { IMatch, verseProps } from "@/types";
 
-export function normalizeAlif(token: string, includeHamza = false) {
+export function normalizeAlif(
+  token: string,
+  includeHamza = false,
+  reverseAlif = false
+) {
   if (includeHamza) {
     return token.replace(/(آ|إ|أ|ء)/g, "ا");
+  }
+
+  if (reverseAlif) {
+    return token.replace(/(آ|إ|ا|ء)/g, "أ");
   }
 
   return token.replace(/(آ|إ|أ)/g, "ا");
@@ -59,7 +67,7 @@ function isValidArabicLetter(char: string) {
   return validArabicLetters.includes(char);
 }
 
-function splitArabicLetters(arabicText: string) {
+export function splitArabicLetters(arabicText: string) {
   const result = [];
 
   for (const char of arabicText) {
@@ -113,7 +121,7 @@ interface IMatchOptions {
   startOnly?: boolean;
 }
 
-export function getMatches(
+function getMatches(
   text: string,
   searchToken: string,
   matchOptions: IMatchOptions
@@ -122,7 +130,11 @@ export function getMatches(
     return false;
   }
 
-  const { ignoreDiacritics = false, matchIdentical = false, startOnly = false } = matchOptions; // Destructure options with default values
+  const {
+    ignoreDiacritics = false,
+    matchIdentical = false,
+    startOnly = false,
+  } = matchOptions; // Destructure options with default values
 
   const normalizedText = ignoreDiacritics
     ? normalizeAlif(removeDiacritics(text))
@@ -131,7 +143,9 @@ export function getMatches(
   // Check whether we can find any matches
   const isTokenFound = matchIdentical
     ? identicalRegex(searchToken).test(normalizedText)
-    : startOnly ? startRegex(searchToken).test(normalizedText) : normalizedText.includes(searchToken);
+    : startOnly
+    ? startRegex(searchToken).test(normalizedText)
+    : normalizedText.includes(searchToken);
 
   if (!isTokenFound) {
     return false;
@@ -140,7 +154,9 @@ export function getMatches(
   // using RegExp with () here because we want to include the searchToken as a separate part in the resulting array.
   const regex = matchIdentical
     ? identicalRegex(searchToken)
-    : startOnly ? startRegex(searchToken) : new RegExp(`(${escapeRegex(searchToken)})`);
+    : startOnly
+    ? startRegex(searchToken)
+    : new RegExp(`(${escapeRegex(searchToken)})`);
 
   const parts = normalizedText.split(regex).filter((part) => part !== "");
 
@@ -261,7 +277,7 @@ export const searchVerse = (
   const result = getMatches(verse.versetext, searchToken, {
     ignoreDiacritics: !searchDiacritics,
     matchIdentical: searchIdentical,
-    startOnly: searchStart
+    startOnly: searchStart,
   });
 
   if (result) {

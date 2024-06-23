@@ -11,6 +11,7 @@ import Inspector from "./pages/Inspector";
 import Comparator from "./pages/Comparator";
 import Searcher from "./pages/Searcher";
 import Searcher2 from "./pages/Searcher2";
+import Letters from "./pages/Letters";
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
       <Route path="/comparator" element={<Comparator />} />
       <Route path="/searcher" element={<Searcher />} />
       <Route path="/searcher2" element={<Searcher2 />} />
+      <Route path="/letters" element={<Letters />} />
       <Route path="/about" element={<About />} />
       <Route path="*" element={<QuranBrowser />} />
     </Routes>
