@@ -6,7 +6,8 @@ import {
   useTransition,
   memo,
 } from "react";
-
+import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 import useQuran from "@/context/useQuran";
 
 import { useAppSelector, useAppDispatch } from "@/store";
@@ -91,9 +92,10 @@ const VerseItem = memo(({ verse }: VerseItemProps) => {
   const [selectedLetter, setSelectedLetter] = useState("");
   const [selectedWord, setSelectedWord] = useState("");
 
-  const letterData = useAppSelector(
-    (state) => state.lettersPage.lettersData[selectedLetter]
+  const verseLetterData = useAppSelector(
+    (state) => state.lettersPage.lettersData[verse.key]?.[selectedLetter]
   ) ?? {
+    letter_key: selectedLetter,
     letter_role: LetterRole.Unit,
     def_id: "",
   };
@@ -178,7 +180,7 @@ const VerseItem = memo(({ verse }: VerseItemProps) => {
         refCollapse={refCollapsibleLetterBox}
         verseKey={verse.key}
         selectedLetter={selectedLetter}
-        letterData={letterData}
+        verseLetterData={verseLetterData}
       />
     </div>
   );
@@ -190,15 +192,16 @@ interface LetterBoxProps {
   refCollapse?: React.RefObject<HTMLDivElement>;
   verseKey: string;
   selectedLetter: string;
-  letterData: LetterDataType;
+  verseLetterData: LetterDataType;
 }
 
 const LetterBox = ({
   refCollapse,
   verseKey,
   selectedLetter,
-  letterData,
+  verseLetterData,
 }: LetterBoxProps) => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
 
   const quranService = useQuran();
@@ -207,12 +210,16 @@ const LetterBox = ({
     (state) => state.lettersPage.lettersDefinitions
   );
 
+  const letterPresets = useAppSelector(
+    (state) => state.lettersPage.letterPresets
+  );
+
   const [letterRole, setLetterRole] = useState<LetterRole>(
-    letterData.letter_role
+    verseLetterData.letter_role
   );
 
   const [letterDefinitionID, setLetterDefinitionID] = useState(
-    letterData.def_id
+    verseLetterData.def_id
   );
 
   const onChangeSelectRole = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -224,15 +231,22 @@ const LetterBox = ({
   };
 
   const onClickSave = () => {
-    dbFuncs.saveLetterData({
-      letter_key: selectedLetter,
-      letter_role: letterRole,
-      def_id: letterDefinitionID,
-    });
+    dbFuncs
+      .saveLetterData({
+        letter_key: `${verseKey}:${selectedLetter}`,
+        letter_role: letterRole,
+        def_id: letterDefinitionID,
+      })
+      .then(function () {
+        toast.success(t("save_success"));
+      })
+      .catch(function () {
+        toast.error(t("save_failed"));
+      });
 
     dispatch(
       lettersPageActions.setLetterData({
-        letter: selectedLetter,
+        letter: `${verseKey}:${selectedLetter}`,
         role: letterRole,
         def_id: letterDefinitionID,
       })
@@ -240,21 +254,47 @@ const LetterBox = ({
   };
 
   useEffect(() => {
-    setLetterRole(letterData.letter_role);
-  }, [selectedLetter, letterData.letter_role]);
+    setLetterRole(verseLetterData.letter_role);
+  }, [selectedLetter, verseLetterData.letter_role]);
 
   useEffect(() => {
-    setLetterDefinitionID(letterData.def_id);
-  }, [selectedLetter, letterData.def_id]);
+    setLetterDefinitionID(verseLetterData.def_id);
+  }, [selectedLetter, verseLetterData.def_id]);
 
   const renderLetterDefinitionOptions = () => {
     const letter = selectedLetter
-      ? quranService.getLetterByKey(selectedLetter)
+      ? quranService.getLetterByKey(verseKey, selectedLetter)
       : "";
-    const definition =
-      lettersDefinitions[normalizeAlif(letter, false, true)]?.definition;
 
-    return definition ? <option value="-1">{definition}</option> : <></>;
+    const normalizedLetter = normalizeAlif(letter, false, true);
+
+    const letterDefinition = lettersDefinitions[normalizedLetter];
+
+    return (
+      <>
+        {letterDefinition ? (
+          <option value="-1">{letterDefinition.definition}</option>
+        ) : (
+          <></>
+        )}
+        <>
+          {Object.keys(letterPresets).map((presetID) => {
+            const defKey = `${normalizedLetter}:${presetID}`;
+
+            const letterDef = lettersDefinitions[defKey];
+            return (
+              <Fragment key={defKey}>
+                {letterDef ? (
+                  <option value={defKey}>{letterDef.definition}</option>
+                ) : (
+                  <></>
+                )}
+              </Fragment>
+            );
+          })}
+        </>
+      </>
+    );
   };
 
   return (
@@ -343,7 +383,7 @@ const VerseWords = ({
               <SingleLetter
                 key={letterIndex}
                 letter={letter}
-                letterKey={`${verseKey}:${wordIndex}-${letterIndex}`}
+                letterKey={`${wordIndex}-${letterIndex}`}
                 selectedLetter={selectedLetter}
                 handleClickLetter={handleClickLetter}
               />
@@ -404,58 +444,81 @@ const WordBox = ({
 }: WordBoxProps) => {
   const notesFS = useAppSelector((state) => state.settings.notesFontSize);
 
-  const lettersData = useAppSelector((state) => state.lettersPage.lettersData);
+  const verseLettersData =
+    useAppSelector((state) => state.lettersPage.lettersData[verseKey]) || {};
+
   const lettersDefinitions = useAppSelector(
     (state) => state.lettersPage.lettersDefinitions
   );
 
   const wordIndex = Number(selectedWord.split(":")[1]);
 
-  const renderLetter = (
+  const getLetter = (
     letter: string,
-    verseKey: string,
     wordIndex: number,
     letterIndex: number
   ) => {
-    const letterKey = `${verseKey}:${wordIndex}-${letterIndex}`;
+    const letterKey = `${wordIndex}-${letterIndex}`;
+
     const currentLetter = removeDiacritics(letter);
+
     const letterDef = Object.keys(lettersDefinitions).find(
       (key) =>
-        normalizeAlif(key) === normalizeAlif(currentLetter) &&
         lettersDefinitions[key].preset_id &&
-        lettersData[letterKey]?.def_id &&
-        lettersDefinitions[key].preset_id === lettersData[letterKey].def_id
+        verseLettersData[letterKey]?.def_id &&
+        normalizeAlif(lettersDefinitions[key].name) ===
+          normalizeAlif(currentLetter) &&
+        (lettersDefinitions[key].preset_id ===
+          verseLettersData[letterKey].def_id ||
+          `${normalizeAlif(currentLetter, false, true)}:${
+            lettersDefinitions[key].preset_id
+          }` === verseLettersData[letterKey].def_id)
     );
-    const letterRole = lettersData[letterKey]?.letter_role || LetterRole.Unit;
+
+    const letterRole =
+      verseLettersData[letterKey]?.letter_role || LetterRole.Unit;
 
     if (letterRole !== LetterRole.Unit) {
       return null;
     }
 
-    return (
-      <span key={letterIndex}>
-        {letterDef && lettersDefinitions[letterDef]
-          ? lettersDefinitions[letterDef].definition
-          : letter}
-      </span>
-    );
+    const isDef = !!(letterDef && lettersDefinitions[letterDef]);
+
+    return {
+      isDef,
+      definition: isDef ? lettersDefinitions[letterDef].definition : letter,
+    };
   };
 
-  const renderWord = (word: string, index: number) => (
-    <Fragment key={index}>
-      <span
-        className={`display-verses-item-wordbox-item${
-          index === wordIndex
-            ? " display-verses-item-wordbox-item-selected"
-            : ""
-        }`}
-      >
-        {splitArabicLetters(word).map((letter, letterIndex) =>
-          renderLetter(letter, verseKey, index, letterIndex)
-        )}
-      </span>{" "}
-    </Fragment>
-  );
+  const renderWord = (word: string, index: number) => {
+    type DataType = { isDef: boolean; definition: string }[];
+
+    const data: DataType = [];
+    splitArabicLetters(word).forEach((letter, letterIndex) => {
+      const currData = getLetter(letter, index, letterIndex);
+      if (currData) data.push(currData);
+    });
+
+    return (
+      <Fragment key={index}>
+        <span
+          className={`display-verses-item-wordbox-item${
+            index === wordIndex
+              ? " display-verses-item-wordbox-item-selected"
+              : ""
+          }`}
+        >
+          {data.map((def, index) => (
+            <span key={index}>
+              {index > 0 && def.isDef ? " " : ""}
+              {def.definition}
+              {data.length - 1 !== index && def.isDef ? " " : ""}
+            </span>
+          ))}
+        </span>{" "}
+      </Fragment>
+    );
+  };
 
   return (
     <CollapseContent

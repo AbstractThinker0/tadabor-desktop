@@ -31,9 +31,13 @@ const Searcher2 = () => {
 
   const dispatch = useAppDispatch();
 
-  const { verseTab, showQuranTab, scrollKey } = useAppSelector(
-    (state) => state.searcher2Page
+  const verseTab = useAppSelector((state) => state.searcher2Page.verseTab);
+
+  const showQuranTab = useAppSelector(
+    (state) => state.searcher2Page.showQuranTab
   );
+
+  const scrollKey = useAppSelector((state) => state.searcher2Page.scrollKey);
 
   useEffect(() => {
     //
@@ -122,8 +126,21 @@ const Searcher2Tab = ({ handleVerseTab }: Searcher2TabProps) => {
 
   const dispatch = useAppDispatch();
 
-  const { searchString, searchIdentical, searchDiacritics, searchStart } =
-    useAppSelector((state) => state.searcher2Page);
+  const searchString = useAppSelector(
+    (state) => state.searcher2Page.searchString
+  );
+
+  const searchIdentical = useAppSelector(
+    (state) => state.searcher2Page.searchIdentical
+  );
+
+  const searchDiacritics = useAppSelector(
+    (state) => state.searcher2Page.searchDiacritics
+  );
+
+  const searchStart = useAppSelector(
+    (state) => state.searcher2Page.searchStart
+  );
 
   const isVNotesLoading = useAppSelector(isVerseNotesLoading());
 

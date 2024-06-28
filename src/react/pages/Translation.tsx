@@ -14,8 +14,12 @@ const Translation = () => {
   const { t } = useTranslation();
 
   const dispatch = useAppDispatch();
+
   const isTNotesLoading = useAppSelector(isTransNotesLoading());
-  const { currentChapter } = useAppSelector((state) => state.translationPage);
+
+  const currentChapter = useAppSelector(
+    (state) => state.translationPage.currentChapter
+  );
 
   useEffect(() => {
     dispatch(fetchTransNotes());
