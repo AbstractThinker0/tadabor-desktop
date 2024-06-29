@@ -14,8 +14,6 @@ import {
   TabPanel,
 } from "@/components/Generic/Tabs";
 
-import "@/styles/pages/letters.scss";
-
 const Letters = memo(() => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
