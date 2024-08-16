@@ -11,6 +11,7 @@ import {
 } from "@/store/slices/pages/letters";
 
 import { dbFuncs } from "@/util/db";
+import { onlySpaces } from "@/util/util";
 import { arabicAlphabetDefault } from "@/util/consts";
 
 import { TextAreaComponent } from "@/components/Custom/TextForm";
@@ -25,6 +26,8 @@ import {
 } from "@/components/Generic/Modal";
 
 const PanelDefinitions = () => {
+  const { t } = useTranslation();
+
   const definitionsLoading = useAppSelector(
     (state) => state.lettersPage.definitionsLoading
   );
@@ -64,7 +67,7 @@ const PanelDefinitions = () => {
     <div className="panel-def">
       <div className="panel-def-preset">
         <label htmlFor="presetSelect" className="form-label fw-bold fs-4">
-          Preset:
+          {t("letters_preset")}
         </label>
         <select
           id="presetSelect"
@@ -157,22 +160,30 @@ const ModalCreatePreset = () => {
   const dispatch = useAppDispatch();
 
   const refModal = useRef<HTMLDivElement>(null);
+  const refCloseButton = useRef<HTMLButtonElement>(null);
 
   const onChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPresetName(event.target.value);
   };
 
   const onClickSave = () => {
+    if (onlySpaces(presetName)) {
+      alert("Preset name can't be empty.");
+      return;
+    }
+
     const presetID = Date.now().toString();
     dispatch(lettersPageActions.setPreset({ presetID, presetName }));
     dbFuncs
       .saveLettersPreset(presetID, presetName)
-      .then(function () {
+      .then(() => {
         toast.success(t("save_success"));
       })
-      .catch(function () {
+      .catch(() => {
         toast.error(t("save_failed"));
       });
+
+    refCloseButton.current?.click();
   };
 
   useEffect(() => {
@@ -213,6 +224,7 @@ const ModalCreatePreset = () => {
             Preset name:
           </label>
           <input
+            dir="auto"
             id="presetName"
             className="form-input"
             value={presetName}
@@ -225,15 +237,11 @@ const ModalCreatePreset = () => {
           type="button"
           className="btn btn-secondary"
           data-bs-dismiss="modal"
+          ref={refCloseButton}
         >
           Cancel
         </button>
-        <button
-          type="button"
-          className="btn btn-primary"
-          data-bs-dismiss="modal"
-          onClick={onClickSave}
-        >
+        <button type="button" className="btn btn-primary" onClick={onClickSave}>
           Save
         </button>
       </ModalFooter>
@@ -273,10 +281,10 @@ const ModalEditLetter = ({
   const onClickSave = () => {
     dbFuncs
       .saveLetterDefinition(currentPreset, currentLetter, letterDef, letterDir)
-      .then(function () {
+      .then(() => {
         toast.success(t("save_success"));
       })
-      .catch(function () {
+      .catch(() => {
         toast.error(t("save_failed"));
       });
 

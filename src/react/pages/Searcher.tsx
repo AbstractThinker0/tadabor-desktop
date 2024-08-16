@@ -17,6 +17,8 @@ import QuranTab from "@/components/Custom/QuranTab";
 import SearcherDisplay from "@/components/Pages/Searcher/SearcherDisplay";
 import SearcherSide from "@/components/Pages/Searcher/SearcherSide";
 
+import "@/styles/pages/searcher.scss";
+
 const Searcher = () => {
   const { t } = useTranslation();
 

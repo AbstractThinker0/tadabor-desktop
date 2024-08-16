@@ -10,6 +10,8 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import ChaptersList from "@/components/Custom/ChaptersList";
 import DisplayPanel from "@/components/Pages/Translation/DisplayPanel";
 
+import "@/styles/pages/translation.scss";
+
 const Translation = () => {
   const { t } = useTranslation();
 
@@ -25,7 +27,7 @@ const Translation = () => {
     dispatch(fetchTransNotes());
   }, []);
 
-  const handleChapterChange = (chapter: number) => {
+  const handleChapterChange = (chapter: string) => {
     dispatch(translationPageActions.setCurrentChapter(chapter));
   };
 

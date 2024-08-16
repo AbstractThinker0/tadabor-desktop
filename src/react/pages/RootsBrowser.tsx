@@ -25,6 +25,8 @@ import {
 } from "@/components/Generic/Tabs";
 import QuranTab from "@/components/Custom/QuranTab";
 
+import "@/styles/pages/roots.scss";
+
 const RootsBrowser = () => {
   const refVerseButton = useRef<HTMLButtonElement>(null);
 

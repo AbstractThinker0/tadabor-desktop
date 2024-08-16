@@ -10,6 +10,8 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 
 import Display from "@/components/Pages/Inspector/Display";
 
+import "@/styles/pages/inspector.scss";
+
 function Inspector() {
   const dispatch = useAppDispatch();
 
@@ -19,7 +21,7 @@ function Inspector() {
     (state) => state.inspectorPage.currentChapter
   );
 
-  function handleSelectChapter(chapterID: number) {
+  function handleSelectChapter(chapterID: string) {
     dispatch(inspectorPageActions.setCurrentChapter(chapterID));
     dispatch(inspectorPageActions.setScrollKey(""));
   }

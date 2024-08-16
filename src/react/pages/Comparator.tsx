@@ -17,6 +17,8 @@ import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import Display from "@/components/Pages/Comparator/Display";
 import Menu from "@/components/Pages/Comparator/Menu";
 
+import "@/styles/pages/comparator.scss";
+
 function Comparator() {
   const quranService = useQuran();
 

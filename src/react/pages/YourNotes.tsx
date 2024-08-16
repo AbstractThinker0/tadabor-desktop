@@ -17,6 +17,8 @@ import TransNotes from "@/components/Pages/YourNotes/TransNotes";
 
 import { TAB } from "@/components/Pages/YourNotes/consts";
 
+import "@/styles/pages/yournotes.scss";
+
 function YourNotes() {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
