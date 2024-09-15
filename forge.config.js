@@ -23,7 +23,7 @@ const config = {
         "https://raw.githubusercontent.com/AbstractThinker0/tadabor-desktop/master/src/tadabor.ico",
     }),
     new MakerZIP({}, ["darwin"]),
-    new MakerRpm({ options: { license: "MIT" } }),
+    new MakerRpm({}),
     new MakerDeb({}),
   ],
   plugins: [
