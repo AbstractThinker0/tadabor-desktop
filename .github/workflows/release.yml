@@ -21,17 +21,8 @@ jobs:
       - uses: actions/setup-node@master
         with:
           node-version: 20
-
-      # Step to install dependencies on Linux (Ubuntu)
-      - name: Install build dependencies on Linux
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y rpm build-essential python3
-
       - name: install dependencies
         run: npm ci
-
       - name: publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
