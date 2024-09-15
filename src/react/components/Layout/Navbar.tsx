@@ -2,6 +2,10 @@ import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
 
+import { Box, Flex, Button, useDisclosure } from "@chakra-ui/react";
+
+import SettingsModal from "@/components/Layout/SettingsModal";
+
 const Navbar = () => {
   const { t } = useTranslation();
 
@@ -25,9 +29,9 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav>
-      <div className="nav-list">
-        <div className="nav-list-start">
+    <Box as="nav" role="navigation" bgColor="gray.800" px={2} py={1}>
+      <Flex justifyContent="space-between">
+        <Flex flexWrap="wrap" gap={1.5}>
           <NavItem to="/" label={t("nav_browser")} />
           <NavItem to="/roots" label={t("nav_roots")} />
           <NavItem to="/translation" label={t("nav_translation")} />
@@ -39,13 +43,14 @@ const Navbar = () => {
           <NavItem to="/searcher" label={t("nav_searcher")} />
           <NavItem to="/searcher2" label={`${t("nav_searcher")}  2`} />
           <NavItem to="/letters" label={t("nav_letters")} />
+          <NavItem to="/audio" label={t("nav_audio")} />
           <NavItem to="/about" label={t("nav_about")} />
-        </div>
-        <div className="nav-list-end">
+        </Flex>
+        <Flex>
           <SettingsButton />
-        </div>
-      </div>
-    </nav>
+        </Flex>
+      </Flex>
+    </Box>
   );
 };
 
@@ -56,21 +61,38 @@ interface NavItemProps {
 
 const NavItem = ({ label, to }: NavItemProps) => {
   return (
-    <div className="nav-list-start-item">
-      <NavLink to={to}>{label}</NavLink>
-    </div>
+    <Button
+      _activeLink={{ bg: "var(--color-primary)" }}
+      bgColor={"#bdb8c6"}
+      px={1}
+      py={0}
+      fontWeight="400"
+      fontSize="large"
+      lineHeight={1}
+      as={NavLink}
+      to={to}
+    >
+      {label}
+    </Button>
   );
 };
 
 const SettingsButton = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
-    <span
-      className="nav-settings-button"
-      data-bs-toggle="modal"
-      data-bs-target="#settingsModal"
-    >
-      ⚙️
-    </span>
+    <>
+      <Button
+        aria-label="Settings"
+        onClick={onOpen}
+        variant="ghost"
+        fontSize="large"
+        padding={0}
+      >
+        ⚙️
+      </Button>
+      <SettingsModal isOpen={isOpen} onClose={onClose} />
+    </>
   );
 };
 

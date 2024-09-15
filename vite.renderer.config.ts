@@ -22,7 +22,6 @@ export default defineConfig((env) => {
     },
     resolve: {
       alias: {
-        "~bootstrap": path.resolve(__dirname, "node_modules/bootstrap"),
         "@": path.resolve(__dirname, "src/react"),
       },
       preserveSymlinks: true,

@@ -1,4 +1,4 @@
-import { memo, useState, useCallback } from "react";
+import { memo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
@@ -6,70 +6,59 @@ import { useAppDispatch, useAppSelector, selectTransNote } from "@/store";
 import { transNotesActions } from "@/store/slices/global/transNotes";
 import { dbFuncs } from "@/util/db";
 
-import { TextAreaComponent } from "@/components/Custom/TextForm";
+import { Box, FormControl, Text } from "@chakra-ui/react";
+import TextareaAutosize from "@/components/Custom/TextareaAutosize";
+import { ButtonEdit, ButtonSave } from "@/components/Generic/Buttons";
 
 interface TransComponentProps {
-  verse_key: string;
+  inputKey: string;
 }
 
-const TransComponent = memo(({ verse_key }: TransComponentProps) => {
+const TransComponent = memo(({ inputKey }: TransComponentProps) => {
   const { t } = useTranslation();
 
   const dispatch = useAppDispatch();
 
-  const verse_trans = useAppSelector(selectTransNote(verse_key));
+  const inputValue = useAppSelector(selectTransNote(inputKey));
 
-  const [stateEditable, setStateEditable] = useState(
-    verse_trans ? false : true
-  );
+  const [isEditable, setEditable] = useState(inputValue ? false : true);
 
-  const handleEditClick = useCallback(() => {
-    setStateEditable(true);
-  }, []);
+  const handleEditClick = () => {
+    setEditable(true);
+  };
 
-  const handleInputSubmit = useCallback(
-    (inputKey: string, inputValue: string) => {
-      setStateEditable(false);
+  const handleInputSubmit = () => {
+    setEditable(false);
 
-      dbFuncs
-        .saveTranslation(inputKey, inputValue)
-        .then(() => {
-          toast.success(t("save_success"));
-        })
-        .catch(() => {
-          toast.error(t("save_failed"));
-        });
-    },
-    [t]
-  );
+    dbFuncs
+      .saveTranslation(inputKey, inputValue)
+      .then(() => {
+        toast.success(t("save_success"));
+      })
+      .catch(() => {
+        toast.error(t("save_failed"));
+      });
+  };
 
-  const handleInputChange = useCallback(
-    (key: string, value: string) => {
-      dispatch(
-        transNotesActions.changeTranslation({
-          name: key,
-          value: value,
-        })
-      );
-    },
-    [dispatch]
-  );
+  const handleInputChange = (value: string) => {
+    dispatch(
+      transNotesActions.changeTranslation({
+        name: inputKey,
+        value: value,
+      })
+    );
+  };
 
   return (
     <>
-      {stateEditable === false ? (
-        <Versetext
-          inputKey={verse_key}
-          inputValue={verse_trans}
-          handleEditClick={handleEditClick}
-        />
-      ) : (
+      {isEditable ? (
         <Versearea
-          inputKey={verse_key}
-          inputValue={verse_trans}
+          inputValue={inputValue}
           handleInputChange={handleInputChange}
           handleInputSubmit={handleInputSubmit}
         />
+      ) : (
+        <Versetext inputValue={inputValue} handleEditClick={handleEditClick} />
       )}
     </>
   );
@@ -79,82 +68,61 @@ TransComponent.displayName = "TransComponent";
 
 interface VersetextProps {
   inputValue: string;
-  inputKey: string;
   handleEditClick: () => void;
 }
 
-const Versetext = ({
-  inputValue,
-  inputKey,
-  handleEditClick,
-}: VersetextProps) => {
-  const { t } = useTranslation();
+const Versetext = ({ inputValue, handleEditClick }: VersetextProps) => {
   const notesFS = useAppSelector((state) => state.settings.notesFontSize);
 
-  function onClickEdit() {
+  const onClickEdit = () => {
     handleEditClick();
-  }
+  };
 
   return (
-    <div className="p-2">
-      <div className="border p-1 translation-display-card-trans-text">
-        <p
-          style={{ whiteSpace: "pre-wrap", fontSize: `${notesFS}rem` }}
-          dir="ltr"
-        >
+    <Box padding={2}>
+      <Box border={"1px solid #dee2e6"} padding={1}>
+        <Text whiteSpace={"pre-wrap"} fontSize={`${notesFS}rem`} dir="ltr">
           {inputValue}
-        </p>
-      </div>
-      <div className="text-center">
-        <button
-          name={inputKey}
-          onClick={onClickEdit}
-          className="mt-2 btn btn-primary btn-sm"
-        >
-          {t("text_edit")}
-        </button>
-      </div>
-    </div>
+        </Text>
+      </Box>
+      <Box textAlign={"center"}>
+        <ButtonEdit onClick={onClickEdit} />
+      </Box>
+    </Box>
   );
 };
 
 interface VerseareaProps {
-  inputKey: string;
   inputValue: string;
-  handleInputChange: (key: string, value: string) => void;
-  handleInputSubmit: (inputKey: string, inputValue: string) => void;
+  handleInputChange: (value: string) => void;
+  handleInputSubmit: (inputValue: string) => void;
 }
 
 const Versearea = ({
   inputValue,
-  inputKey,
   handleInputChange,
   handleInputSubmit,
 }: VerseareaProps) => {
-  const { t } = useTranslation();
+  const onSubmit = () => {
+    handleInputSubmit(inputValue);
+  };
 
-  function onClickSave() {
-    handleInputSubmit(inputKey, inputValue);
-  }
+  const onChangeText = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    handleInputChange(event.target.value);
+  };
 
   return (
-    <div className="p-2" dir="ltr">
-      <TextAreaComponent
-        inputKey={inputKey}
-        inputValue={inputValue}
+    <FormControl as="form" onSubmit={onSubmit} padding={2} dir="ltr">
+      <TextareaAutosize
         placeholder="Enter your text."
-        handleInputChange={handleInputChange}
+        value={inputValue}
+        onChange={onChangeText}
+        backgroundColor={"white"}
       />
-      <div className="text-center">
-        <button
-          name={inputKey}
-          onClick={onClickSave}
-          className="mt-2 btn btn-success btn-sm"
-        >
-          {t("text_save")}
-        </button>
-      </div>
-    </div>
+      <Box textAlign={"center"}>
+        <ButtonSave />
+      </Box>
+    </FormControl>
   );
 };
 

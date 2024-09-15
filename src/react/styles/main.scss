@@ -1,6 +1,3 @@
-// Import all of Bootstrap's CSS
-@import "~bootstrap/scss/bootstrap";
-
 @import "./variables.scss";
 
 @font-face {
@@ -8,16 +5,10 @@
   src: url("../../assets/fonts/ScheherazadeNew-Medium.ttf");
 }
 
-main {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-
-  font-family: "Scheherazade New", serif;
-  font-size: larger;
-  line-height: normal;
-
-  @import "./layout.scss";
+body {
+  mark {
+    padding-top: 2px;
+    padding-bottom: 2px;
+    background-color: #fff3cd;
+  }
 }
-
-@import "./main_md.scss";

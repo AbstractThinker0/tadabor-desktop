@@ -9,29 +9,37 @@ import useQuran from "@/context/useQuran";
 
 import { searchIndexProps, verseMatchResult } from "@/types";
 
-import { Tooltip } from "bootstrap";
-
-import { ExpandButton } from "@/components/Generic/Buttons";
 import LoadingSpinner from "@/components/Generic/LoadingSpinner";
 import VerseHighlightMatches from "@/components/Generic/VerseHighlightMatches";
 
-import NoteText from "@/components/Custom/NoteText";
 import VerseContainer from "@/components/Custom/VerseContainer";
 
 import { SEARCH_METHOD } from "@/components/Pages/QuranBrowser/consts";
 
+import {
+  Box,
+  Button,
+  Divider,
+  HStack,
+  Heading,
+  Tag,
+  Text,
+  Tooltip,
+  useBoolean,
+} from "@chakra-ui/react";
+
+import { CollapsibleNote } from "@/components/Custom/CollapsibleNote";
+import { ButtonExpand, ButtonVerse } from "@/components/Generic/Buttons";
+
 interface ListSearchResultsProps {
   versesArray: verseMatchResult[];
-
   searchError: boolean;
 }
 
 const ListSearchResults = ({
   versesArray,
-
   searchError,
 }: ListSearchResultsProps) => {
-  const quranService = useQuran();
   const { t } = useTranslation();
   const [selectedVerse, setSelectedVerse] = useState("");
 
@@ -82,14 +90,14 @@ const ListSearchResults = ({
 
   if (searchingChapters.length === 0) {
     return (
-      <h3 className="p-1" dir="auto">
+      <Heading p={3} size="md" dir="auto">
         {t("select_notice")}
-      </h3>
+      </Heading>
     );
   }
 
   return (
-    <>
+    <Box p={1}>
       <SearchTitle
         searchMethod={searchingMethod}
         searchChapters={searchingChapters}
@@ -100,30 +108,23 @@ const ListSearchResults = ({
           searchIndexes={searchIndexes}
         />
       )}
-      <div className="card-body browser-display-card-list" ref={refListVerses}>
+      <Box ref={refListVerses}>
         {isPending ? (
           <LoadingSpinner />
         ) : (
           stateVerses.map((verse) => (
-            <div
+            <VerseItem
               key={verse.key}
-              data-id={verse.key}
-              className={`border-bottom browser-display-card-list-item ${
-                verse.key === selectedVerse ? "verse-selected" : ""
-              }`}
-            >
-              <SearchVerseComponent
-                verse={verse}
-                verseChapter={quranService.getChapterName(verse.suraid)}
-              />
-            </div>
+              verse={verse}
+              isSelected={selectedVerse === verse.key}
+            />
           ))
         )}
         {searchError && (
           <SearchErrorsComponent searchMethod={searchingMethod} />
         )}
-      </div>
-    </>
+      </Box>
+    </Box>
   );
 };
 
@@ -155,19 +156,19 @@ const SearchTitle = ({ searchMethod, searchChapters }: SearchTitleProps) => {
 
   const ChaptersList = ({ searchChapters }: { searchChapters: string[] }) => {
     return (
-      <>
+      <HStack pt={1} wrap={"wrap"}>
         {searchChapters.map((chapterName, index) => (
-          <span className="browser-display-card-search-chapter" key={index}>
+          <Tag colorScheme="green" size="lg" variant={"solid"} key={index}>
             {chapterName}
-          </span>
+          </Tag>
         ))}
-      </>
+      </HStack>
     );
   };
 
   return (
-    <div className="browser-display-card-search" dir="auto">
-      <h3>{searchText}</h3>
+    <div dir="auto">
+      <Heading size="md">{searchText}</Heading>
       {searchChapters.length !== 114 && (
         <ChaptersList searchChapters={searchChapters} />
       )}
@@ -186,57 +187,27 @@ const DerivationsComponent = ({
   searchIndexes,
   handleRootClick,
 }: DerivationsComponentProps) => {
-  const refListRoots = useRef<HTMLSpanElement>(null);
-  useEffect(() => {
-    if (!refListRoots.current) return;
-
-    //init tooltip
-    Array.from(
-      refListRoots.current.querySelectorAll('[data-bs-toggle="tooltip"]')
-    ).forEach((tooltipNode) => new Tooltip(tooltipNode));
-  }, [searchIndexes]);
-
   return (
     <>
-      <hr />
-      <span ref={refListRoots} className="p-2">
+      <Divider />
+      <HStack wrap="wrap" px={2} divider={<>-</>}>
         {searchIndexes.map((root: searchIndexProps, index: number) => (
-          <span
-            role="button"
-            key={index}
-            onClick={() => handleRootClick(root.key)}
-            data-bs-toggle="tooltip"
-            data-bs-title={root.text}
-          >
-            {`${index ? " -" : " "} ${root.name}`}
-          </span>
+          <Tooltip hasArrow key={index} label={root.text}>
+            <Button
+              px={2}
+              fontSize="xl"
+              variant="ghost"
+              onClick={() => handleRootClick(root.key)}
+            >{`${root.name}`}</Button>
+          </Tooltip>
         ))}
-      </span>
-      <hr />
+      </HStack>
+      <Divider />
     </>
   );
 };
 
 DerivationsComponent.displayName = "DerivationsComponent";
-
-interface SearchVerseComponentProps {
-  verse: verseMatchResult;
-  verseChapter: string;
-}
-
-const SearchVerseComponent = ({
-  verse,
-  verseChapter,
-}: SearchVerseComponentProps) => {
-  return (
-    <>
-      <VerseContentComponent verse={verse} verseChapter={verseChapter} />
-      <NoteText verseKey={verse.key} />
-    </>
-  );
-};
-
-SearchVerseComponent.displayName = "SearchVerseComponent";
 
 interface SearchErrorsComponentProps {
   searchMethod: string;
@@ -247,54 +218,52 @@ const SearchErrorsComponent = ({
 }: SearchErrorsComponentProps) => {
   const { t } = useTranslation();
   return (
-    <div dir="auto">
-      <p className="mt-3 text-danger">
-        {searchMethod === SEARCH_METHOD.WORD
-          ? t("search_fail")
-          : t("search_root_error")}
-      </p>
-    </div>
+    <Text p={3} dir="auto" color="rgb(220, 53, 69)">
+      {searchMethod === SEARCH_METHOD.WORD
+        ? t("search_fail")
+        : t("search_root_error")}
+    </Text>
   );
 };
 
-interface VerseContentComponentProps {
+interface VerseItemProps {
   verse: verseMatchResult;
-  verseChapter: string;
+  isSelected: boolean;
 }
 
-const VerseContentComponent = ({
-  verse,
-  verseChapter,
-}: VerseContentComponentProps) => {
+const VerseItem = ({ verse, isSelected }: VerseItemProps) => {
   const dispatch = useAppDispatch();
-  const verse_key = verse.key;
+  const quranService = useQuran();
 
-  function gotoChapter(chapter: string) {
-    dispatch(qbPageActions.gotoChapter(chapter));
-  }
+  const [isOpen, setOpen] = useBoolean();
 
-  const handleVerseClick = (verse_key: string) => {
-    gotoChapter(verse.suraid);
-    dispatch(qbPageActions.setScrollKey(verse_key));
+  const onClickVerseChapter = () => {
+    dispatch(qbPageActions.gotoChapter(verse.suraid));
+    dispatch(qbPageActions.setScrollKey(verse.key));
   };
 
   return (
-    <>
+    <Box
+      data-id={verse.key}
+      p={1}
+      borderBottom="1px solid gainsboro"
+      backgroundColor={isSelected ? "bisque" : undefined}
+    >
       <VerseContainer>
         <VerseHighlightMatches verse={verse} /> (
-        <button
-          className="p-0 border-0 bg-transparent btn-verse"
-          onClick={() => handleVerseClick(verse_key)}
-        >
-          {`${verseChapter}:${verse.verseid}`}
-        </button>
+        <ButtonVerse
+          onClick={onClickVerseChapter}
+        >{`${quranService.getChapterName(verse.suraid)}:${
+          verse.verseid
+        }`}</ButtonVerse>
         )
+        <ButtonExpand onClick={setOpen.toggle} />
       </VerseContainer>
-      <ExpandButton identifier={verse_key} />
-    </>
+      <CollapsibleNote isOpen={isOpen} inputKey={verse.key} />
+    </Box>
   );
 };
 
-VerseContentComponent.displayName = "VerseContentComponent";
+VerseItem.displayName = "VerseItem";
 
 export default ListSearchResults;
