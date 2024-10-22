@@ -13,7 +13,6 @@ const config = {
     executableName: "tadabor",
     icon: "./src/tadabor.ico",
     asar: false,
-    appVersion: "1.0.0",
   },
   rebuildConfig: {},
   makers: [
