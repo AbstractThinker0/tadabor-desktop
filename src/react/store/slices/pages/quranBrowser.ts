@@ -89,9 +89,7 @@ const qbPageSlice = createSlice({
       state.searchIndexes = [];
       state.searchingString = state.searchString;
       state.searchingMethod = state.searchMethod;
-      state.searchingChapters = filteredChapters.map((chapterID) =>
-        quranService.getChapterName(chapterID)
-      );
+      state.searchingChapters = filteredChapters;
       state.scrollKey = "";
 
       const result = quranService.searchByWord(
@@ -124,9 +122,7 @@ const qbPageSlice = createSlice({
       state.searchIndexes = [];
       state.searchingString = state.searchString;
       state.searchingMethod = state.searchMethod;
-      state.searchingChapters = filteredChapters.map((chapterID) =>
-        quranService.getChapterName(chapterID)
-      );
+      state.searchingChapters = filteredChapters;
       state.scrollKey = "";
 
       const result = quranService.searchByRoot(
@@ -137,6 +133,7 @@ const qbPageSlice = createSlice({
       if (result) {
         state.searchResult = result.matchVerses;
         state.searchIndexes = result.derivations;
+        state.searchError = false;
       } else {
         state.searchError = true;
       }

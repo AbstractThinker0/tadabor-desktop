@@ -23,6 +23,8 @@ import {
   HStack,
   Heading,
   Tag,
+  TagCloseButton,
+  TagLabel,
   Text,
   Tooltip,
   useBoolean,
@@ -154,25 +156,43 @@ const SearchTitle = ({ searchMethod, searchChapters }: SearchTitleProps) => {
     "search_result"
   )} ${searchType} "${searchingString}" ${searchScopeText}`;
 
-  const ChaptersList = ({ searchChapters }: { searchChapters: string[] }) => {
-    return (
-      <HStack pt={1} wrap={"wrap"}>
-        {searchChapters.map((chapterName, index) => (
-          <Tag colorScheme="green" size="lg" variant={"solid"} key={index}>
-            {chapterName}
-          </Tag>
-        ))}
-      </HStack>
-    );
+  return (
+    <div dir="auto">
+      <Heading pb={3} size="xl" color="blue.600">
+        {searchText}
+      </Heading>
+      {searchChapters.length !== 114 && (
+        <ChaptersTags searchChapters={searchChapters} />
+      )}
+    </div>
+  );
+};
+
+const ChaptersTags = ({ searchChapters }: { searchChapters: string[] }) => {
+  const quranService = useQuran();
+  const dispatch = useAppDispatch();
+
+  const searchMethod = useAppSelector((state) => state.qbPage.searchMethod);
+
+  const onClickClose = (chapterID: string) => {
+    dispatch(qbPageActions.toggleSelectChapter(Number(chapterID)));
+
+    if (searchMethod === SEARCH_METHOD.ROOT) {
+      dispatch(qbPageActions.submitRootSearch({ quranInstance: quranService }));
+    } else {
+      dispatch(qbPageActions.submitWordSearch({ quranInstance: quranService }));
+    }
   };
 
   return (
-    <div dir="auto">
-      <Heading size="md">{searchText}</Heading>
-      {searchChapters.length !== 114 && (
-        <ChaptersList searchChapters={searchChapters} />
-      )}
-    </div>
+    <HStack py={1} wrap={"wrap"}>
+      {searchChapters.map((chapterID, index) => (
+        <Tag colorScheme="green" size="lg" variant={"solid"} key={index}>
+          <TagLabel>{quranService.getChapterName(chapterID)}</TagLabel>
+          <TagCloseButton onClick={() => onClickClose(chapterID)} />
+        </Tag>
+      ))}
+    </HStack>
   );
 };
 
@@ -189,8 +209,8 @@ const DerivationsComponent = ({
 }: DerivationsComponentProps) => {
   return (
     <>
-      <Divider />
-      <HStack wrap="wrap" px={2} divider={<>-</>}>
+      <Divider pb={1} borderColor={"gray"} />
+      <HStack wrap="wrap" p={2} divider={<>-</>}>
         {searchIndexes.map((root: searchIndexProps, index: number) => (
           <Tooltip hasArrow key={index} label={root.text}>
             <Button
@@ -202,7 +222,7 @@ const DerivationsComponent = ({
           </Tooltip>
         ))}
       </HStack>
-      <Divider />
+      <Divider mb={2} borderColor={"gray"} />
     </>
   );
 };

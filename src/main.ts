@@ -1,54 +1,15 @@
 import { app, BrowserWindow, shell, Menu } from "electron";
 import path from "path";
-import { spawn } from "child_process";
+import { inlineUpdater } from "electron-inline-updater";
 
 import contextMenu from "electron-context-menu";
 contextMenu({
   showSearchWithGoogle: false,
 });
 
-import { updateElectronApp } from "update-electron-app";
-updateElectronApp();
-
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
-// code extracted from https://www.npmjs.com/package/electron-squirrel-startup
-if (process.platform === "win32") {
-  const updateExe = path.resolve(
-    path.dirname(process.execPath),
-    "..",
-    "Update.exe"
-  );
-
-  const run = function (args: [string], done: () => void) {
-    spawn(updateExe, args, {
-      detached: true,
-    }).on("close", done);
-  };
-
-  const check = function () {
-    const cmd = process.argv[1];
-
-    const target = path.basename(process.execPath);
-
-    if (cmd === "--squirrel-install" || cmd === "--squirrel-updated") {
-      run(["--createShortcut=" + target + ""], app.quit);
-      return true;
-    }
-    if (cmd === "--squirrel-uninstall") {
-      run(["--removeShortcut=" + target + ""], app.quit);
-      return true;
-    }
-    if (cmd === "--squirrel-obsolete") {
-      app.quit();
-      return true;
-    }
-    return false;
-  };
-
-  if (check()) {
-    app.quit();
-  }
-}
+import { squirrelStartup } from "./lib/squirrelStartup";
+squirrelStartup();
 
 const createWindow = (): void => {
   // Create the browser window.
@@ -85,6 +46,8 @@ const createWindow = (): void => {
   mainWindow.once("ready-to-show", () => {
     mainWindow.maximize();
     mainWindow.show();
+
+    inlineUpdater();
 
     const menu = Menu.getApplicationMenu();
     const items = menu.items.filter((item) => item.role !== "help");
