@@ -1,0 +1,18 @@
+:root {
+  --color-primary: #eff4f9;
+  --color-secondary: #868b8e;
+  --color-third: #b9b7bd;
+  --color-fourth: #e7d2cc;
+  --color-fifth: #fefefe;
+}
+
+@font-face {
+  font-family: "Scheherazade New";
+  src: url("../../assets/fonts/ScheherazadeNew-Medium.ttf");
+}
+
+body mark {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  background-color: #fff3cd;
+}
