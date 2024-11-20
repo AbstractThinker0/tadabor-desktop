@@ -13,6 +13,7 @@ const config = {
     executableName: "tadabor",
     icon: "./src/tadabor.ico",
     asar: false,
+    appVersion: "1.0.0",
   },
   rebuildConfig: {},
   makers: [
@@ -21,6 +22,8 @@ const config = {
       setupIcon: "./src/tadabor.ico",
       iconUrl:
         "https://raw.githubusercontent.com/AbstractThinker0/tadabor-desktop/master/src/tadabor.ico",
+      noDelta: false,
+      remoteReleases: "https://github.com/AbstractThinker0/tadabor-desktop",
     }),
     new MakerZIP({}, ["darwin"]),
     new MakerRpm({}),
