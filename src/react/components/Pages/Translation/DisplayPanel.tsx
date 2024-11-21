@@ -38,24 +38,24 @@ const DisplayPanel = ({ selectChapter }: DisplayPanelProps) => {
       setStateVerses(quranService.getVerses(selectChapter));
     });
 
-    refDisplay.current.scrollTop = 0;
+    if (!scrollKey) {
+      refDisplay.current.scrollTop = 0;
+    }
   }, [selectChapter]);
 
   useEffect(() => {
-    if (!scrollKey) return;
-
-    if (!refListVerses.current) return;
+    if (!scrollKey || !refListVerses.current) return;
 
     const verseToHighlight = refListVerses.current.querySelector(
       `[data-id="${scrollKey}"]`
     );
 
-    if (!verseToHighlight) return;
-
-    verseToHighlight.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
-    });
+    if (verseToHighlight) {
+      verseToHighlight.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
   }, [scrollKey, isPending]);
 
   return (

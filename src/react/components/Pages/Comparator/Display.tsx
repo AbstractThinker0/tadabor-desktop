@@ -30,6 +30,9 @@ const Display = ({
 }: DisplayProps) => {
   const [stateVerses, setStateVerses] = useState<verseProps[]>([]);
 
+  const quranService = useQuran();
+  const refListVerses = useRef<HTMLDivElement>(null);
+
   const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
@@ -55,32 +58,12 @@ const Display = ({
       behavior: "smooth",
       block: "center",
     });
-  }, [isPending]);
-
-  const quranService = useQuran();
-  const refListVerses = useRef<HTMLDivElement>(null);
+  }, [isPending, currentVerse]);
 
   const onClickVerse = (verseKey: string) => {
     const verseToSelect = currentVerse === verseKey ? "" : verseKey;
     handleSelectVerse(verseToSelect);
   };
-
-  useEffect(() => {
-    if (!refListVerses.current) return;
-
-    if (!currentVerse) return;
-
-    const verseToHighlight = refListVerses.current.querySelector(
-      `[data-id="${currentVerse}"]`
-    );
-
-    if (!verseToHighlight) return;
-
-    verseToHighlight.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
-    });
-  }, [currentVerse]);
 
   return (
     <Box bgColor={"#f7fafc"} px={5}>
