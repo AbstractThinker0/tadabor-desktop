@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef, useState, useTransition } from "react";
+import { memo, useCallback, useEffect, useState, useTransition } from "react";
 
 import { useAppDispatch, useAppSelector } from "@/store";
 import { tagsPageActions } from "@/store/slices/pages/tags";
@@ -21,6 +21,9 @@ import {
   CardBody,
   CardHeader,
   Flex,
+  Tag,
+  TagCloseButton,
+  TagLabel,
   useBoolean,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -60,6 +63,10 @@ function TagsDisplay() {
     });
 
     return Object.fromEntries(filtered);
+  };
+
+  const onClickCloseChapter = (chapterID: string) => {
+    dispatch(tagsPageActions.toggleSelectChapter(Number(chapterID)));
   };
 
   return (
@@ -106,15 +113,20 @@ function TagsDisplay() {
                 ) : chaptersScope.length === 0 ? (
                   <Box fontWeight={"bold"}>No chapters selected.</Box>
                 ) : (
-                  chaptersScope.map((chapterID) => (
-                    <Box
-                      p={"2px"}
-                      borderRadius={"0.3rem"}
-                      bgColor={"beige"}
-                      key={chapterID}
+                  chaptersScope.map((chapterID, index) => (
+                    <Tag
+                      colorScheme="green"
+                      size="lg"
+                      variant={"solid"}
+                      key={index}
                     >
-                      {quranService.getChapterName(chapterID)}
-                    </Box>
+                      <TagLabel overflow={"visible"}>
+                        {quranService.getChapterName(chapterID)}
+                      </TagLabel>
+                      <TagCloseButton
+                        onClick={() => onClickCloseChapter(chapterID)}
+                      />
+                    </Tag>
                   ))
                 )}
               </Flex>
@@ -258,26 +270,30 @@ const ListVerses = memo(
 
     const [isPending, startTransition] = useTransition();
 
-    const listRef = useRef<HTMLDivElement>(null);
-
     const currentChapter = useAppSelector(
       (state) => state.tagsPage.currentChapter
     );
 
     const scrollKey = useAppSelector((state) => state.tagsPage.scrollKey);
 
-    useEffect(() => {
-      const verseToHighlight = scrollKey
-        ? listRef.current?.querySelector(`[data-id="${scrollKey}"]`)
-        : null;
+    // Handling scroll by using a callback ref
+    const handleVerseListRef = useCallback(
+      (node: HTMLDivElement | null) => {
+        if (node && scrollKey) {
+          const verseToHighlight = node.querySelector(
+            `[data-id="${scrollKey}"]`
+          ) as HTMLDivElement;
 
-      if (verseToHighlight) {
-        verseToHighlight.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
-      }
-    }, [scrollKey, isPending]);
+          if (verseToHighlight) {
+            verseToHighlight.scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+            });
+          }
+        }
+      },
+      [scrollKey, isPending]
+    );
 
     useEffect(() => {
       //
@@ -298,7 +314,7 @@ const ListVerses = memo(
         >
           سورة {quranService.getChapterName(currentChapter)}
         </CardHeader>
-        <CardBody bgColor={"#f7fafc"} pt={0} ref={listRef}>
+        <CardBody bgColor={"#f7fafc"} pt={0} ref={handleVerseListRef}>
           {isPending ? (
             <LoadingSpinner />
           ) : (
