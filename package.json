@@ -42,7 +42,7 @@
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
     "dexie": "^4.0.7",
-    "electron": "31.1.0",
+    "electron": "34.0.2",
     "electron-context-menu": "^3.6.1",
     "electron-inline-updater": "^0.0.11",
     "eslint": "^8.57.0",
