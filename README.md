@@ -1,3 +1,5 @@
+## Paused working on this project in favor of [tadabor PWA](https://github.com/AbstractThinker0/tadabor) which can be installed on desktop
+
 # Tadabor-desktop: Quran Desktop App
 
 This project is an App that allows you to browse the Quran and write your notes/reflections below the verses, everything will be saved in the application.
